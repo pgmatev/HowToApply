@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register University</title>
+</head>
+<body>
+    <h1>Register</h1>
+    <form method="POST" action="">
+        {% csrf_token %}
+        {% for field in form %}
+            {{ field.label }}
+            {{ field }}
+            <br>
+        {% endfor %}
+        {% for uni_field in university_form %}
+            {{ uni_field.label }}
+            {{ uni_field }}
+            <br>
+        {% endfor %}
+        {{ form.errors }}
+        {{ university_form.errors }}
+        <input type="submit" name="Create University">
+    </form>
+</body>
+</html>
