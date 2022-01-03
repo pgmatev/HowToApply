@@ -1,10 +1,13 @@
-from django.shortcuts import render, redirect
+from django.utils import timezone
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.views.generic.detail import DetailView
 
 from .forms import UniversityForm, StudentForm, AuthenticateUserForm
+from .models import Student, University
 
 
 def login_excluded(redirect_to):
@@ -20,10 +23,33 @@ def login_excluded(redirect_to):
 # Create your views here.
 
 
-
+# class StudentDetailView(DetailView):
+#
+#     model = Student
+#     template_name = 'hta_platform/student_profile.html'
+#
+#     def get_context_data(self, **kwargs):
+#         student = get_object_or_404(Student, id=self.kwargs['pk'])
+#         current_user = request.user
+#         context = super(StudentDetailView, self).get_context_data(**kwargs)
+#         context['student'] = student
+#         context['user'] = current_user
+#         return context
 
 def home(request):
     return render(request, 'hta_platform/home.html')
+
+
+@login_required(login_url='/')
+def profile(request):
+    current_user = request.user
+
+    if hasattr(current_user, 'student'):
+        context = {'user': current_user, 'student': current_user.student}
+        return render(request, 'hta_platform/student_profile.html', context)
+    elif hasattr(current_user, 'university'):
+        context = {'user': current_user, 'student': current_user.university}
+        return render(request, 'hta_platform/university_profile.html', context)
 
 
 @login_excluded('home')

@@ -1,0 +1,7 @@
+{% extends "hta_platform/base.html" %}
+{% block content %}
+    <h1>Profile</h1>
+    {{ user.username }}
+    {{ user.university.website }}
+    <a class="btn btn-secondary" href="/logout">Logout</a>
+{% endblock %}
