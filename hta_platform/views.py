@@ -12,13 +12,17 @@ from .models import Student, University
 
 def login_excluded(redirect_to):
     """ This decorator kicks authenticated users out of a view """
+
     def _method_wrapper(view_method):
         def _arguments_wrapper(request, *args, **kwargs):
             if request.user.is_authenticated:
                 return redirect(redirect_to)
             return view_method(request, *args, **kwargs)
+
         return _arguments_wrapper
+
     return _method_wrapper
+
 
 # Create your views here.
 
@@ -50,6 +54,10 @@ def profile(request):
     elif hasattr(current_user, 'university'):
         context = {'user': current_user, 'student': current_user.university}
         return render(request, 'hta_platform/university_profile.html', context)
+    else:
+        context = {'user': current_user}
+        # need to pass message
+        return render(request, 'hta_platform/home.html', context)
 
 
 @login_excluded('home')

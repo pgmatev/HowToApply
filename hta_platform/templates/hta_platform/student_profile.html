@@ -1,7 +1,12 @@
 {% extends "hta_platform/base.html" %}
 {% block content %}
-    <h1>Profile</h1>
-    {{ user.username }}
-    {{ user.student.age }}
-    <a class="btn btn-secondary" href="/logout">Logout</a>
+    <div>
+        <h1>Profile</h1>
+        <p>Username: {{ user.username }}</p>
+        <p>Name: {{ user.first_name }}</p>
+        <p>Surname: {{ user.last_name }}</p>
+        <p>Email: {{ user.email }}</p>
+        <p>Age: {{ user.student.age }}</p>
+        <a class="btn btn-secondary" href="/logout">Logout</a>
+    </div>
 {% endblock %}
