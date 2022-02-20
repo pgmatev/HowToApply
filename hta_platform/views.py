@@ -90,9 +90,12 @@ def university_register(request):
         university_form = UniversityForm(request.POST)
 
         if form.is_valid() and university_form.is_valid():
-            user = form.save()
+            user = form.save(commit=False)
             university = university_form.save(commit=False)
+            user.is_active = False
+            user.save()
             university.user = user
+            # university.user.is_active = False
             university.save()
             # messages.success(request, 'Successfully added ' + university_form.cleaned_data.get('username'))
             return redirect('login')
