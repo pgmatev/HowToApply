@@ -1,19 +1,23 @@
 {% extends 'hta_platform/base.html' %}
 {% block content %}
-<h1>Login</h1>
-<form method="POST" action="">
-    {% csrf_token %}
-    <label>
-        <input type="text" name="username" placeholder="Username...">
-    </label>
-    <br>
-    <label>
-        <input type="password" name="password" placeholder="Password...">
-    </label>
-    <br>
-    {% for message in messages %}
-        <p>{{ message }}</p>
-    {% endfor %}
-    <input type="submit" name="Login User">
-</form>
+    <div class="d-flex flex-column justify-content-center align-items-center">
+        <h1 class="m-4">Login</h1>
+        <form method="POST" action="">
+            {% csrf_token %}
+            <div class="form-group m-2">
+                <label for="username">Username
+                    <input type="text" name="username" class="form-control" placeholder="Username...">
+                </label>
+            </div>
+            <div class="form-group m-2">
+                <label>Password
+                    <input type="password" name="password" class="form-control" placeholder="Password...">
+                </label>
+            </div>
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+            <input type="submit" class="btn btn-primary m-2" name="Login User">
+        </form>
+    </div>
 {% endblock %}

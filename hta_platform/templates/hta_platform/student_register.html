@@ -1,20 +1,27 @@
 {% extends 'hta_platform/base.html' %}
 {% block content %}
-<h1>Register</h1>
-<form method="POST" action="">
-        {% csrf_token %}
-        {% for field in form %}
-            {{ field.label }}
-            {{ field }}
-            <br>
-        {% endfor %}
-        {% for st_field in student_form %}
-            {{ st_field.label }}
-            {{ st_field }}
-            <br>
-        {% endfor %}
-        {{ form.errors }}
-        {{ student_form.errors }}
-        <input type="submit" class="btn btn-primary" name="Register Student">
-</form>
+    <div class="d-flex flex-column justify-content-center align-items-center">
+        <h1 class="m-4">Register</h1>
+        <form method="POST" action="">
+
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="form-group m-2">
+                        <label for="">{{ field.label }}
+                            {{ field }}
+                        </label>
+                    </div>
+                {% endfor %}
+                {% for st_field in student_form %}
+                    <div class="form-group m-2">
+                        <label for="">{{ st_field.label }}
+                            {{ st_field }}
+                        </label>
+                    </div>
+                {% endfor %}
+                {{ form.errors }}
+                {{ student_form.errors }}
+                <input type="submit" class="btn btn-primary m-2" name="Register Student">
+        </form>
+    </div>
 {% endblock %}

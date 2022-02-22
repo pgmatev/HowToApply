@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.views.generic.detail import DetailView
 
-from .forms import UniversityForm, StudentForm, AuthenticateUserForm
+from .forms import UniversityForm, StudentForm, AuthenticateUserForm, AuthenticateUniversityForm
 from .models import Student, University
 
 
@@ -82,7 +82,7 @@ def student_register(request):
 
 @login_excluded('home')
 def university_register(request):
-    form = UserCreationForm()
+    form = AuthenticateUniversityForm()
     university_form = UniversityForm()
 
     if request.method == 'POST':
