@@ -9,16 +9,21 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a href="/" class="navbar-brand">How to Apply</a>
-        <div class="collapse navbar-collapse">
+        <div class="collapse navbar-collapse m-3">
         {% if user.is_authenticated %}
             <a class="navbar-text text-decoration-none" href="{% url 'profile' %}">Hi, {{ user.username }}</a>
         {% else %}
-        <div>
-          <a class="btn btn-link" href="{% url 'student_register' %}">Sign Up</a>
-          <a class="btn btn-link" href="{% url 'university_register' %}">Uni Sign Up</a>
-          <a class="btn btn-primary" href="{% url 'login' %}">Login</a>
-        </div>
+            <div>
+              <a class="btn btn-link" href="{% url 'student_register' %}">Sign Up</a>
+              <a class="btn btn-link" href="{% url 'university_register' %}">Uni Sign Up</a>
+              <a class="btn btn-primary" href="{% url 'login' %}">Login</a>
+            </div>
         {% endif %}
+        </div>
+        <div class="navbar-left m-3">
+            <form onsubmit="return executeQuery();">
+            <input type="text" class="form-control" id="id_q" placeholder="Search...">
+            </form>
         </div>
     </nav>
     <div id="site_wrapper">
@@ -28,3 +33,11 @@
     </div>
 </body>
 </html>
+
+<script type="text/javascript">
+function executeQuery(){
+    var query = document.getElementById("id_q").value
+    window.location.replace("{% url 'search' %}?q=" + query)
+    return false
+}
+</script>

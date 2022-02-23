@@ -4,10 +4,13 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.db.models import Q
 from django.views.generic.detail import DetailView
 
 from .forms import UniversityForm, StudentForm, AuthenticateUserForm, AuthenticateUniversityForm
 from .models import Student, University
+
+from itertools import chain
 
 
 def login_excluded(redirect_to):
@@ -58,6 +61,13 @@ def profile(request):
         context = {'user': current_user}
         # need to pass message
         return render(request, 'hta_platform/home.html', context)
+
+
+def other_profile(request):
+    current_user = request.user
+    if request.method == "GET":
+        query = request.path
+        print(query)
 
 
 @login_excluded('home')
@@ -124,3 +134,25 @@ def login_user(request):
 def logout_user(request):
     logout(request)
     return redirect('login')
+
+
+def search(request, *arg, **kwargs):
+    context = {}
+
+    if request.method == "GET":
+        search_query = request.GET.get("q")
+        if len(search_query) > 0:
+            print(search_query)
+            search_students = Student.objects.filter(Q(user__username__icontains=search_query) |
+                                                     Q(user__email__icontains=search_query) |
+                                                     Q(user__first_name__icontains=search_query) |
+                                                     Q(user__last_name__icontains=search_query))
+            search_universities = University.objects.filter(Q(user__username__icontains=search_query) |
+                                                            Q(name__icontains=search_query))
+            print(search_students)
+            search_results = list(chain(search_students, search_universities))
+            context['search_results'] = search_results
+            context['search_query'] = search_query
+            # print(search_results)
+
+    return render(request, 'hta_platform/search_results.html', context)
