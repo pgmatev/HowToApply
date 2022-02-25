@@ -7,6 +7,8 @@
         <p>Surname: {{ user.last_name }}</p>
         <p>Email: {{ user.email }}</p>
         <p>Age: {{ user.student.age }}</p>
+        {% if request.user == user %}
         <a class="btn btn-secondary" href="/logout">Logout</a>
+        {% endif %}
     </div>
 {% endblock %}

@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
@@ -8,7 +9,7 @@ from django.db.models import Q
 from django.views.generic.detail import DetailView
 
 from .forms import UniversityForm, StudentForm, AuthenticateUserForm, AuthenticateUniversityForm
-from .models import Student, University
+from .models import Student, University, User
 
 from itertools import chain
 
@@ -47,20 +48,30 @@ def home(request):
     return render(request, 'hta_platform/home.html')
 
 
-@login_required(login_url='/')
-def profile(request):
-    current_user = request.user
+# @login_required(login_url='/')
+def profile(request, *args, **kwargs):
+    user_id = kwargs.get("user_id")
+    # current_user = request.user
 
-    if hasattr(current_user, 'student'):
-        context = {'user': current_user, 'student': current_user.student}
-        return render(request, 'hta_platform/student_profile.html', context)
-    elif hasattr(current_user, 'university'):
-        context = {'user': current_user, 'student': current_user.university}
-        return render(request, 'hta_platform/university_profile.html', context)
-    else:
-        context = {'user': current_user}
-        # need to pass message
-        return render(request, 'hta_platform/home.html', context)
+    try:
+        user = User.objects.get(pk=user_id)
+    except User.DoesNotExist():
+        return HttpResponse("User doesn't exist")
+
+    if user:
+
+        if hasattr(user, 'student'):
+            context = {'user': user, 'student': user.student}
+            return render(request, 'hta_platform/student_profile.html', context)
+
+        elif hasattr(user, 'university'):
+            context = {'user': user, 'student': user.university}
+            return render(request, 'hta_platform/university_profile.html', context)
+
+        else:
+            context = {'user': user}
+            # need to pass message
+            return render(request, 'hta_platform/home.html', context)
 
 
 def other_profile(request):

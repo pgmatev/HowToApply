@@ -7,8 +7,8 @@ urlpatterns = [
     path('register/', views.student_register, name='student_register'),
     path('login/', views.login_user, name='login'),
     path('logout/', views.logout_user, name='logout'),
-    path('profile/', views.profile, name='profile'),
+    # path('profile/', views.profile, name='profile'),
     path('search/', views.search, name='search'),
-    path('profiles/<uuid:user_id>', views.other_profile, name='profiles')
+    path('profiles/<user_id>', views.profile, name='profiles')
     # path('<university.username>')
 ]

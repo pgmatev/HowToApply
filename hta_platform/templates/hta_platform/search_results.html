@@ -3,7 +3,7 @@
     <h1>Search results for "{{ search_query }}:"</h1>
     {% if search_results %}
         {% for result in search_results %}
-            <a href="../profiles/{{ result.user_id }}/">{{ result.user.username }}</a>
+            <a href="{% url 'profiles' user_id=result.user.id %}">{{ result.user.username }}</a>
         {% endfor %}
     {% else %}
         <p>No results</p>
