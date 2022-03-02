@@ -6,12 +6,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.db.models import Q
-from django.views.generic.detail import DetailView
 
-from .forms import UniversityForm, StudentForm, AuthenticateUserForm, AuthenticateUniversityForm
-from .models import Student, University, User
+from .forms import UniversityForm, StudentForm, AuthenticateUserForm, AuthenticateUniversityForm, PostForm
+from .models import Student, University, User, Post
 
 from itertools import chain
+import datetime
 
 
 def login_excluded(redirect_to):
@@ -31,21 +31,24 @@ def login_excluded(redirect_to):
 # Create your views here.
 
 
-# class StudentDetailView(DetailView):
-#
-#     model = Student
-#     template_name = 'hta_platform/student_profile.html'
-#
-#     def get_context_data(self, **kwargs):
-#         student = get_object_or_404(Student, id=self.kwargs['pk'])
-#         current_user = request.user
-#         context = super(StudentDetailView, self).get_context_data(**kwargs)
-#         context['student'] = student
-#         context['user'] = current_user
-#         return context
-
 def home(request):
-    return render(request, 'hta_platform/home.html')
+    user = request.user
+
+    if user:
+
+        if hasattr(user, 'student'):
+            context = {'user': user, 'student': user.student}
+            return render(request, 'hta_platform/student_home.html', context)
+
+        elif hasattr(user, 'university'):
+            posts = Post.objects.filter(author_id=user.university.id)
+            context = {'user': user, 'student': user.university, 'posts': posts}
+            return render(request, 'hta_platform/university_home.html', context)
+
+        else:
+            context = {'user': user}
+            # need to pass message
+            return render(request, 'hta_platform/home.html', context)
 
 
 # @login_required(login_url='/')
@@ -71,14 +74,7 @@ def profile(request, *args, **kwargs):
         else:
             context = {'user': user}
             # need to pass message
-            return render(request, 'hta_platform/home.html', context)
-
-
-def other_profile(request):
-    current_user = request.user
-    if request.method == "GET":
-        query = request.path
-        print(query)
+            return render(request, 'hta_platform/student_home.html', context)
 
 
 @login_excluded('home')
@@ -167,3 +163,41 @@ def search(request, *arg, **kwargs):
             # print(search_results)
 
     return render(request, 'hta_platform/search_results.html', context)
+
+
+@login_required
+def create_post(request):
+    user = request.user
+    post_form = PostForm()
+
+    if user:
+        if hasattr(user, 'university'):
+            if request.method == 'POST':
+                post_form = PostForm(request.POST)
+
+                if post_form.is_valid():
+                    post = post_form.save(commit=False)
+                    post.author = user.university
+                    post.date_posted = datetime.datetime.now()
+                    post.save()
+                    return redirect('view_post', slug=post.slug)
+
+            context = {'form': post_form}
+            return render(request, 'hta_platform/create_post.html', context)
+
+
+def view_post(request, *args, **kwargs):
+    post_slug = kwargs.get("slug")
+
+    try:
+        post = Post.objects.get(slug=post_slug)
+    except Post.DoesNotExist():
+        return HttpResponse("Post doesn't exist")
+
+    if post:
+        context = {'post': post}
+        return render(request, 'hta_platform/view_post.html', context)
+
+
+
+

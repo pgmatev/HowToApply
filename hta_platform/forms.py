@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import University, Student
+from .models import University, Student, Post
 
 
 class AuthenticateUserForm(UserCreationForm):
@@ -60,3 +60,14 @@ class StudentForm(forms.ModelForm):
             'age': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Age'})
         }
         fields = ['age']
+
+
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Title'}),
+            'content': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Write your post...'}),
+            'slug': forms.SlugField
+        }
+        fields = ['title', 'content']
