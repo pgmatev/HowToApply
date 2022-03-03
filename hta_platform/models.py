@@ -20,7 +20,8 @@ class Post(models.Model):
     title = models.CharField(max_length=100)
     slug = models.SlugField(null=False, unique=True)
     content = models.TextField()
-    date_posted = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(University, on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):

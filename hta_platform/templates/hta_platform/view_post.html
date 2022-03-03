@@ -4,5 +4,9 @@
     <hr><br>
     <p>{{ post.content }}</p>
     <br>
+    <p>Last update: {{ post.updated_at }}</p>
     <a href="{% url 'profiles' user_id=post.author.user.id %}">{{ post.author.name }}</a> {{ post.date_posted }}
+    {% if request.user == post.author.user %}
+                <a class="btn btn-secondary" href="{% url 'update_post' slug=post.slug %}">Edit</a>
+    {% endif %}
 {% endblock %}

@@ -3,7 +3,7 @@ from .models import Post, University, Student
 
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'slug', 'date_posted')
+    list_display = ('title', 'slug', 'created_at')
     # list_filter = ("status",)
     search_fields = ['title', 'content']
     prepopulated_fields = {'slug': ('title',)}

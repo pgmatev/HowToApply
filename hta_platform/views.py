@@ -54,7 +54,6 @@ def home(request):
 # @login_required(login_url='/')
 def profile(request, *args, **kwargs):
     user_id = kwargs.get("user_id")
-    # current_user = request.user
 
     try:
         user = User.objects.get(pk=user_id)
@@ -68,7 +67,8 @@ def profile(request, *args, **kwargs):
             return render(request, 'hta_platform/student_profile.html', context)
 
         elif hasattr(user, 'university'):
-            context = {'user': user, 'student': user.university}
+            posts = Post.objects.filter(author=user.university)
+            context = {'university': user.university, 'posts': posts}
             return render(request, 'hta_platform/university_profile.html', context)
 
         else:
@@ -112,7 +112,6 @@ def university_register(request):
             user.is_active = False
             user.save()
             university.user = user
-            # university.user.is_active = False
             university.save()
             # messages.success(request, 'Successfully added ' + university_form.cleaned_data.get('username'))
             return redirect('login')
@@ -146,7 +145,7 @@ def logout_user(request):
 def search(request, *arg, **kwargs):
     context = {}
 
-    if request.method == "GET":
+    if request.method == 'GET':
         search_query = request.GET.get("q")
         if len(search_query) > 0:
             print(search_query)
@@ -160,7 +159,6 @@ def search(request, *arg, **kwargs):
             search_results = list(chain(search_students, search_universities))
             context['search_results'] = search_results
             context['search_query'] = search_query
-            # print(search_results)
 
     return render(request, 'hta_platform/search_results.html', context)
 
@@ -178,7 +176,7 @@ def create_post(request):
                 if post_form.is_valid():
                     post = post_form.save(commit=False)
                     post.author = user.university
-                    post.date_posted = datetime.datetime.now()
+                    post.created_at = datetime.datetime.now()
                     post.save()
                     return redirect('view_post', slug=post.slug)
 
@@ -199,5 +197,32 @@ def view_post(request, *args, **kwargs):
         return render(request, 'hta_platform/view_post.html', context)
 
 
+@login_required
+def update_post(request, *args, **kwargs):
+    post_slug = kwargs.get("slug")
+    user = request.user
+
+    try:
+        post = Post.objects.get(slug=post_slug)
+    except Post.DoesNotExist():
+        return HttpResponse("Post doesn't exist")
+
+    if post and user == post.author.user:
+        post_form = PostForm(instance=post)
+
+        if request.method == 'POST':
+            post_form = PostForm(request.POST, instance=post)
+
+            if post_form.is_valid():
+                post = post_form.save(commit=False)
+                post.updated_at = datetime.datetime.now()
+                post.save()
+                return redirect('view_post', slug=post.slug)
+        context = {'form': post_form, 'post': post}
+        return render(request, 'hta_platform/update_post.html', context)
 
 
+@login_required
+def delete_post(request, slug):
+    Post.objects.filter(slug=slug).delete()
+    return redirect('home')

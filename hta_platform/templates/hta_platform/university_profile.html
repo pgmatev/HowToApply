@@ -1,9 +1,12 @@
 {% extends "hta_platform/base.html" %}
 {% block content %}
     <h1>Profile</h1>
-    {{ user.username }}
-    {{ user.university.website }}
-    {% if request.user == user %}
+    {{ university.user.username }}
+    {{ university.website }}
+    {% if request.user == university.user %}
         <a class="btn btn-secondary" href="/logout">Logout</a>
     {% endif %}
+    {% for post in posts %}
+        <a href="{% url 'view_post' slug=post.slug %}">{{ post.title }}</a>
+    {% endfor %}
 {% endblock %}
