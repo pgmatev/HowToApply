@@ -31,7 +31,7 @@ class Post(models.Model):
         super(Post, self).save(*args, **kwargs)
 
 
-def slugify_unique(value, model, slugfield="slug"):  #increments slugs of posts that share a title
+def slugify_unique(value, model, slugfield="slug"):  # increments slugs of posts that share a title
     suffix = 0
     potential = base = slugify(value)
     while True:

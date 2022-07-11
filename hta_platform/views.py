@@ -6,7 +6,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.db.models import Q
 
-from .forms import UniversityForm, EditStudentForm, EditUserForm, AuthenticateUserForm, AuthenticateUniversityForm, PostForm
+from .forms import UniversityForm, EditStudentForm, EditUserForm,\
+                AuthenticateUserForm, AuthenticateUniversityForm, PostForm
 from .models import Student, University, User, Post
 
 from itertools import chain
@@ -94,9 +95,28 @@ def edit_profile(request):
                     user = edit_user_form.save()
                     user.student = edit_student_form.save()
 
+                    return redirect(request, 'profiles', user.id)
+
             context = {'edit_user_form': edit_user_form, 'edit_student_form': edit_student_form, 'user': user}
             return render(request, 'hta_platform/edit_student_profile.html', context)
+        elif hasattr(user, 'university'):
+            # edit_user_form = EditUserForm(instance=user)
+            # i need to decide which user attributes i want to edit in university edit and make a form for them
+            edit_university_form = UniversityForm(instance=user.university)
 
+            if request.method == 'POST':
+                # edit_user_form = EditUserForm(request.POST, instance=user)
+                edit_university_form = UniversityForm(request.POST, instance=user.university)
+
+                if edit_university_form.is_valid():
+                    edit_university_form.full_clean()
+                    # user = edit_user_form.save()
+                    user.university = edit_university_form.save()
+
+                    return redirect('home')
+
+            context = {'edit_university_form': edit_university_form, 'user': user}
+            return render(request, 'hta_platform/edit_university_profile.html', context)
         else:
             context = {'user': user}
             # need to pass message

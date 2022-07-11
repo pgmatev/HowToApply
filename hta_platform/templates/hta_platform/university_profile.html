@@ -1,12 +1,43 @@
 {% extends "hta_platform/base.html" %}
 {% block content %}
-    <h1>Profile</h1>
-    {{ university.user.username }}
-    {{ university.website }}
-    {% if request.user == university.user %}
-        <a class="btn btn-secondary" href="{% url 'logout' %}">Logout</a>
-    {% endif %}
-    {% for post in posts %}
-        <a href="{% url 'view_post' slug=post.slug %}">{{ post.title }}</a>
-    {% endfor %}
+{#    <h1>Profile</h1>#}
+{#    {{ university.user.username }}#}
+{#    {{ university.website }}#}
+{#    {% if request.user == university.user %}#}
+{#        <a class="btn btn-secondary" href="{% url 'logout' %}">Logout</a>#}
+{#    {% endif %}#}
+{#    {% for post in posts %}#}
+{#        <a href="{% url 'view_post' slug=post.slug %}">{{ post.title }}</a>#}
+{#    {% endfor %}#}
+
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 col-lg7">
+            <h1>Latest posts:</h1>
+                {% for post in posts %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <a href="{% url 'view_post' slug=post.slug %}" class="link-dark mb-0 stretched-link text-decoration-none">{{ post.title }}</a>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">{{ post.created_at }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+        </div>
+        <div class="col-mid-4 col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">{{ university.name }}</h4>
+                    <a href="{{ university.website }}" class="text-muted card-subtitle mb-2 text-decoration-none">{{ university.website }}</a>
+                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab aliquam blanditiis, culpa cum delectus dolor, doloribus eos eveniet in inventore magni nemo neque non, omnis quas quisquam quos rerum vitae.</p>
+                    <a href="#" class="btn btn-primary">Programs</a>
+                    <a href="#" class="btn btn-primary">Exams</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}

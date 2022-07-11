@@ -7,11 +7,17 @@ from .models import University, Student, Post
 class AuthenticateUserForm(UserCreationForm):
     password1 = forms.CharField(
         label="Password",
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'type': 'password', 'placeholder': 'Password'}),
+        widget=forms.PasswordInput(
+                    attrs={'class': 'form-control',
+                           'type': 'password',
+                           'placeholder': 'Password'}),
     )
     password2 = forms.CharField(
         label="Confirm password",
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'type': 'password', 'placeholder': 'Confirm Password'}),
+        widget=forms.PasswordInput(
+                    attrs={'class': 'form-control',
+                           'type': 'password',
+                           'placeholder': 'Confirm Password'}),
     )
 
     class Meta:
@@ -28,11 +34,17 @@ class AuthenticateUserForm(UserCreationForm):
 class AuthenticateUniversityForm(UserCreationForm):
     password1 = forms.CharField(
         label="Password",
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'type': 'password', 'placeholder': 'Password'}),
+        widget=forms.PasswordInput(
+                    attrs={'class': 'form-control',
+                           'type': 'password',
+                           'placeholder': 'Password'}),
     )
     password2 = forms.CharField(
         label="Confirm password",
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'type': 'password', 'placeholder': 'Confirm Password'}),
+        widget=forms.PasswordInput(
+                    attrs={'class': 'form-control',
+                           'type': 'password',
+                           'placeholder': 'Confirm Password'}),
     )
 
     class Meta:
