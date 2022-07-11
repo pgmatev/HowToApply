@@ -2,12 +2,14 @@ from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
 from django.contrib.auth.models import User
-from django.utils.functional import empty
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    age = models.IntegerField()
+    age = models.IntegerField(null=True)
+    obligatory_mark = models.DecimalField(null=True, max_digits=3, decimal_places=2,
+                                          validators=[MinValueValidator(2.00), MaxValueValidator(6.00)])
 
 
 class University(models.Model):
@@ -29,7 +31,7 @@ class Post(models.Model):
         super(Post, self).save(*args, **kwargs)
 
 
-def slugify_unique(value, model, slugfield="slug"): #increments slugs of posts that share a title
+def slugify_unique(value, model, slugfield="slug"):  #increments slugs of posts that share a title
     suffix = 0
     potential = base = slugify(value)
     while True:
@@ -38,7 +40,3 @@ def slugify_unique(value, model, slugfield="slug"): #increments slugs of posts t
         if not model.objects.filter(**{slugfield: potential}).count():
             return potential
         suffix += 1
-
-
-
-

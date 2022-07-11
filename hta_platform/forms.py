@@ -53,13 +53,27 @@ class UniversityForm(forms.ModelForm):
         fields = ['name', 'website']
 
 
-class StudentForm(forms.ModelForm):
+class EditUserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}),
+        }
+        fields = ['username', 'first_name', 'last_name', 'email']
+
+
+class EditStudentForm(forms.ModelForm):
     class Meta:
         model = Student
         widgets = {
-            'age': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Age'})
+            'age': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Age'}),
+            'obligatory_mark': forms.NumberInput(
+                attrs={'step': 0.01, 'class': 'form-control', 'placeholder': 'Obligatory Mark'}),
         }
-        fields = ['age']
+        fields = ['age', 'obligatory_mark']
 
 
 class PostForm(forms.ModelForm):

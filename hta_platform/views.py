@@ -1,13 +1,12 @@
 from django.http import HttpResponse
-from django.utils import timezone
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.db.models import Q
 
-from .forms import UniversityForm, StudentForm, AuthenticateUserForm, AuthenticateUniversityForm, PostForm
+from .forms import UniversityForm, EditStudentForm, EditUserForm, AuthenticateUserForm, AuthenticateUniversityForm, PostForm
 from .models import Student, University, User, Post
 
 from itertools import chain
@@ -77,23 +76,47 @@ def profile(request, *args, **kwargs):
             return render(request, 'hta_platform/student_home.html', context)
 
 
+@login_required
+def edit_profile(request):
+    user = request.user
+
+    if user:
+        if hasattr(user, 'student'):
+            edit_user_form = EditUserForm(instance=user)
+            edit_student_form = EditStudentForm(instance=user.student)
+
+            if request.method == 'POST':
+                edit_user_form = EditUserForm(request.POST, instance=user)
+                edit_student_form = EditStudentForm(request.POST, instance=user.student)
+
+                if edit_user_form.is_valid() and edit_student_form.is_valid():
+                    edit_student_form.full_clean()
+                    user = edit_user_form.save()
+                    user.student = edit_student_form.save()
+
+            context = {'edit_user_form': edit_user_form, 'edit_student_form': edit_student_form, 'user': user}
+            return render(request, 'hta_platform/edit_student_profile.html', context)
+
+        else:
+            context = {'user': user}
+            # need to pass message
+            return render(request, 'hta_platform/student_home.html', context)
+
+
 @login_excluded('home')
 def student_register(request):
     form = AuthenticateUserForm()
-    student_form = StudentForm()
 
     if request.method == 'POST':
         form = AuthenticateUserForm(request.POST)
-        student_form = StudentForm(request.POST)
 
-        if form.is_valid() and student_form.is_valid():
+        if form.is_valid():
             user = form.save()
-            student = student_form.save(commit=False)
-            student.user = user
+            student = Student.objects.create(user=user)
             student.save()
             return redirect('login')
 
-    context = {'form': form, 'student_form': student_form}
+    context = {'form': form}
     return render(request, 'hta_platform/student_register.html', context)
 
 
@@ -142,7 +165,7 @@ def logout_user(request):
     return redirect('login')
 
 
-def search(request, *arg, **kwargs):
+def search(request):
     context = {}
 
     if request.method == 'GET':
