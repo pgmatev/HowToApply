@@ -8,7 +8,7 @@ from django.db.models import Q
 
 from .forms import UniversityForm, EditStudentForm, EditUserForm,\
                 AuthenticateUserForm, AuthenticateUniversityForm, PostForm
-from .models import Student, University, User, Post
+from .models import Student, University, User, Post, Program, ProgramExam, Exam, StudentExam, Subject
 
 from itertools import chain
 import datetime
@@ -269,3 +269,29 @@ def update_post(request, *args, **kwargs):
 def delete_post(request, slug):
     Post.objects.filter(slug=slug).delete()
     return redirect('home')
+
+
+def list_programs(request, *args, **kwargs):
+    university_username = kwargs.get("university_username")
+
+    try:
+        user = User.objects.get(username=university_username)
+    except User.DoesNotExist():
+        return HttpResponse("User doesn't exist")
+
+    programs = Program.objects.filter(university=user.university)
+    context = {'university': user.university, 'programs': programs}
+    return render(request, 'hta_platform/list_programs.html', context)
+
+
+def view_program(request, *args, **kwargs):
+    program = kwargs.get("program_id")
+
+    try:
+        program = Program.objects.get(id=program)
+    except Program.DoesNotExist():
+        return HttpResponse("Post doesn't exist")
+
+    if program:
+        context = {'program': program}
+        return render(request, 'hta_platform/view_program.html', context)
