@@ -15,7 +15,18 @@ class Student(models.Model):
 class University(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
+    description = models.TextField(null=True)
     website = models.URLField()
+
+
+class Program(models.Model):
+    university = models.ForeignKey(University, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    obligatory_coef = models.FloatField(
+        validators=[MinValueValidator(0.0), MaxValueValidator(3.0)]
+    )
+
 
 
 class Post(models.Model):

@@ -7,6 +7,5 @@
         <br>
         <a href="{% url 'view_post' slug=post.slug %}">{{ post.title }}</a>
     {% endfor %}
-    <a href="{% url 'logout' %}" class="btn btn-secondary">Logout</a>
-    <a href="{% url 'edit_profile' %}" class="btn btn-secondary">Edit</a>
+
 {% endblock %}

@@ -113,7 +113,7 @@ def edit_profile(request):
                     # user = edit_user_form.save()
                     user.university = edit_university_form.save()
 
-                    return redirect('home')
+                    return redirect('profiles', user.id)
 
             context = {'edit_university_form': edit_university_form, 'user': user}
             return render(request, 'hta_platform/edit_university_profile.html', context)

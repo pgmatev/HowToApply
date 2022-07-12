@@ -60,9 +60,10 @@ class UniversityForm(forms.ModelForm):
         model = University
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'University Name'}),
+            'description' : forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'University Description'}),
             'website': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'Website Link'})
         }
-        fields = ['name', 'website']
+        fields = ['name', 'description', 'website']
 
 
 class EditUserForm(forms.ModelForm):

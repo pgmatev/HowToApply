@@ -1,12 +1,28 @@
 {% extends 'hta_platform/base.html' %}
 {% block content %}
-    <h1>{{ post.title }}</h1>
-    <hr><br>
-    <p>{{ post.content }}</p>
-    <br>
-    <p>Last update: {{ post.updated_at }}</p>
-    <a href="{% url 'profiles' user_id=post.author.user.id %}">{{ post.author.name }}</a> {{ post.date_posted }}
-    {% if request.user == post.author.user %}
+{#    <h1>{{ post.title }}</h1>#}
+{#    <hr><br>#}
+{#    <p>{{ post.content }}</p>#}
+{#    <br>#}
+{#    <p>Last update: {{ post.updated_at }}</p>#}
+{#    <a href="{% url 'profiles' user_id=post.author.user.id %}">{{ post.author.name }}</a> {{ post.date_posted }}#}
+{#    {% if request.user == post.author.user %}#}
+{#                <a class="btn btn-secondary" href="{% url 'update_post' slug=post.slug %}">Edit</a>#}
+{#    {% endif %}#}
+    <div class="container">
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">{{ post.title }}</h5>
+            </div>
+            <div class="card-body">
+                <small>Last update: {{ post.updated_at }}</small>
+                <a href="{% url 'profiles' user_id=post.author.user.id %}">{{ post.author.name }}</a>
+                {% if request.user == post.author.user %}
                 <a class="btn btn-secondary" href="{% url 'update_post' slug=post.slug %}">Edit</a>
-    {% endif %}
+                {% endif %}
+                <p class="card-text">{{ post.content }}</p>
+
+            </div>
+        </div>
+    </div>
 {% endblock %}
