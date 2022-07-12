@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post, University, Student
+from .models import Post, University, Student, StudentExam, Program, ProgramExam, Exam, Subject
 
 
 class PostAdmin(admin.ModelAdmin):
@@ -15,3 +15,8 @@ class PostAdmin(admin.ModelAdmin):
 admin.site.register(Post, PostAdmin)
 admin.site.register(University)
 admin.site.register(Student)
+admin.site.register(StudentExam)
+admin.site.register(Program)
+admin.site.register(ProgramExam)
+admin.site.register(Exam)
+admin.site.register(Subject)
