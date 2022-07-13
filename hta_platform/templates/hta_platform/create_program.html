@@ -1,0 +1,26 @@
+{% extends 'hta_platform/base.html' %}
+{% block content %}
+    <div class="d-flex flex-column justify-content-center align-items-center">
+        <h1 class="m-4">Create Program</h1>
+        <form method="POST" action="">
+            {% csrf_token %}
+            {% for field in program_form %}
+                <div class="form-group m-2">
+                    <label for="">{{ field.label }}
+                        {{ field }}
+                    </label>
+                </div>
+            {% endfor %}
+            {% for uni_field in program_exam_form %}
+                <div class="form-group m-2">
+                    <label for="">{{ uni_field.label }}
+                        {{ uni_field }}
+                    </label>
+                </div>
+            {% endfor %}
+            {{ form.errors }}
+            {{ university_form.errors }}
+            <input class="btn btn-primary m-2" type="submit" name="Create University">
+        </form>
+    </div>
+{% endblock %}

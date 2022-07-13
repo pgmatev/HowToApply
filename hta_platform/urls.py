@@ -16,6 +16,7 @@ urlpatterns = [
     path('post/update/<slug>', views.update_post, name='update_post'),
     path('post/delete/<slug>', views.delete_post, name='delete_post'),
     path('programs/<university_username>', views.list_programs, name='list_programs'),
-    path('programs/<university_username>/<program_id>', views.view_program, name='view_program')
+    path('programs/<university_username>/<program_id>', views.view_program, name='view_program'),
+    path('program/create', views.create_program, name='create_program')
     # path('<university.username>')
 ]

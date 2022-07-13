@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.db.models import Q
 
 from .forms import UniversityForm, EditStudentForm, EditUserForm,\
-                AuthenticateUserForm, AuthenticateUniversityForm, PostForm
+                AuthenticateUserForm, AuthenticateUniversityForm, PostForm, ProgramForm, ProgramExamForm
 from .models import Student, University, User, Post, Program, ProgramExam, Exam, StudentExam, Subject
 
 from itertools import chain
@@ -295,3 +295,35 @@ def view_program(request, *args, **kwargs):
     if program:
         context = {'program': program}
         return render(request, 'hta_platform/view_program.html', context)
+
+
+@login_required
+def create_program(request):
+    user = request.user
+    program_form = ProgramForm()
+    exams = user.university.exam_set.all()
+    print(exams)
+    program_exam_form = ProgramExamForm()
+    program_exam_form.fields['exam'].queryset = exams
+
+
+
+    if user:
+        if hasattr(user, 'university'):
+            if request.method == 'POST':
+                program_form = ProgramForm(request.POST)
+                program_exam_form = ProgramExamForm(request.POST)
+                program_exam_form.fields['exam'].queryset = exams
+
+
+                if program_form.is_valid() & program_exam_form.is_valid():
+                    program = program_form.save(commit=False)
+                    program.university = user.university
+                    program_exam = program_exam_form.save(commit=False)
+                    program_exam.program = program
+                    program.save()
+                    program_exam.save()
+                    return redirect('view_program', university_username=user.username, program_id=program.id)
+
+            context = {'program_form': program_form, 'program_exam_form': program_exam_form}
+            return render(request, 'hta_platform/create_program.html', context)

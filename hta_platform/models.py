@@ -29,7 +29,6 @@ class Student(models.Model):
                                            validators=[MinValueValidator(2.00), MaxValueValidator(6.00)])
     exams = models.ManyToManyField(Exam, through='StudentExam')
 
-
 class StudentExam(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     exam = models.ForeignKey(Exam, on_delete=models.DO_NOTHING)
@@ -53,6 +52,9 @@ class ProgramExam(models.Model):
     coef = models.FloatField(
         validators=[MinValueValidator(0.0), MaxValueValidator(3.0)]
     )
+
+    class Meta:
+        unique_together = [['program', 'exam']]
 
 
 class Post(models.Model):

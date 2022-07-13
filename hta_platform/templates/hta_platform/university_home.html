@@ -2,6 +2,7 @@
 {% block content %}
     <p>University</p>
     <a href="{% url 'create_post' %}">Create post</a>
+    <a href="{% url 'create_program' %}">Create program</a>
     <h1>Your posts</h1>
     {% for post in posts %}
         <br>

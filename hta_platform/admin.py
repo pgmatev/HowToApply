@@ -8,13 +8,19 @@ class PostAdmin(admin.ModelAdmin):
     search_fields = ['title', 'content']
     prepopulated_fields = {'slug': ('title',)}
 
-# class StudentAdmin(admin.ModelAdmin):
-#     list_display = ('user.name',)
+
+class StudentAdmin(admin.ModelAdmin):
+    list_display = ('get_username',)
+
+    def get_username(self, obj):
+        return obj.user.username
+    get_username.short_description = 'Username'
+    get_username.admin_order_field = 'user_username'
 
 
 admin.site.register(Post, PostAdmin)
 admin.site.register(University)
-admin.site.register(Student)
+admin.site.register(Student, StudentAdmin)
 admin.site.register(StudentExam)
 admin.site.register(Program)
 admin.site.register(ProgramExam)
