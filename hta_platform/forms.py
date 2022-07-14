@@ -120,6 +120,7 @@ class ProgramExamForm(forms.ModelForm):
 
     exam = forms.ModelChoiceField(queryset=Exam.objects.none())
     coef = forms.NumberInput()
+
     class Meta:
         model = ProgramExam
         widgets = {

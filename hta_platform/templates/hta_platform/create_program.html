@@ -11,10 +11,10 @@
                     </label>
                 </div>
             {% endfor %}
-            {% for uni_field in program_exam_form %}
+            {% for many_to_many_field in program_exam_form %}
                 <div class="form-group m-2">
-                    <label for="">{{ uni_field.label }}
-                        {{ uni_field }}
+                    <label for="">{{ many_to_many_field.label }}
+                        {{ many_to_many_field }}
                     </label>
                 </div>
             {% endfor %}

@@ -8,6 +8,9 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 class Subject(models.Model):
     subject = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.subject
+
 
 class University(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -15,11 +18,18 @@ class University(models.Model):
     description = models.TextField(null=True)
     website = models.URLField()
 
+    def __str__(self):
+        return self.user.username
+
 
 class Exam(models.Model):
     university = models.ForeignKey(University, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
     exam_date = models.DateTimeField()
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
 
 
 class Student(models.Model):
@@ -28,6 +38,10 @@ class Student(models.Model):
     obligatory_mark = models.DecimalField(null=True, max_digits=3, decimal_places=2,
                                            validators=[MinValueValidator(2.00), MaxValueValidator(6.00)])
     exams = models.ManyToManyField(Exam, through='StudentExam')
+
+    def __str__(self):
+        return self.user.username
+
 
 class StudentExam(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
@@ -44,6 +58,9 @@ class Program(models.Model):
         validators=[MinValueValidator(0.0), MaxValueValidator(3.0)]
     )
     exams = models.ManyToManyField(Exam, through='ProgramExam')
+
+    def __str__(self):
+        return self.name
 
 
 class ProgramExam(models.Model):
@@ -64,6 +81,9 @@ class Post(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(University, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.slug
 
     def save(self, *args, **kwargs):
         self.slug = slugify_unique(self.title, Post)

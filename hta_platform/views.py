@@ -306,15 +306,12 @@ def create_program(request):
     program_exam_form = ProgramExamForm()
     program_exam_form.fields['exam'].queryset = exams
 
-
-
     if user:
         if hasattr(user, 'university'):
             if request.method == 'POST':
                 program_form = ProgramForm(request.POST)
                 program_exam_form = ProgramExamForm(request.POST)
                 program_exam_form.fields['exam'].queryset = exams
-
 
                 if program_form.is_valid() & program_exam_form.is_valid():
                     program = program_form.save(commit=False)
