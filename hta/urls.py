@@ -19,5 +19,6 @@ from hta_platform import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('hta_platform.urls') ),
+    path('', include('hta_platform.urls')),
+    path('', include('posts.urls'))
 ]

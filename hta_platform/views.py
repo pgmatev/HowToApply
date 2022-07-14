@@ -7,8 +7,9 @@ from django.contrib import messages
 from django.db.models import Q
 
 from .forms import UniversityForm, EditStudentForm, EditUserForm,\
-                AuthenticateUserForm, AuthenticateUniversityForm, PostForm, ProgramForm, ProgramExamForm
-from .models import Student, University, User, Post, Program, ProgramExam, Exam, StudentExam, Subject
+                AuthenticateUserForm, AuthenticateUniversityForm, ProgramForm, ProgramExamForm
+from .models import Student, University, User, Program, ProgramExam, Exam, StudentExam, Subject
+from posts.models import Post
 
 from itertools import chain
 import datetime
@@ -42,6 +43,7 @@ def home(request):
 
         elif hasattr(user, 'university'):
             posts = Post.objects.filter(author_id=user.university.id)
+            print(posts)
             context = {'user': user, 'student': user.university, 'posts': posts}
             return render(request, 'hta_platform/university_home.html', context)
 
@@ -206,69 +208,6 @@ def search(request):
     return render(request, 'hta_platform/search_results.html', context)
 
 
-@login_required
-def create_post(request):
-    user = request.user
-    post_form = PostForm()
-
-    if user:
-        if hasattr(user, 'university'):
-            if request.method == 'POST':
-                post_form = PostForm(request.POST)
-
-                if post_form.is_valid():
-                    post = post_form.save(commit=False)
-                    post.author = user.university
-                    post.created_at = datetime.datetime.now()
-                    post.save()
-                    return redirect('view_post', slug=post.slug)
-
-            context = {'form': post_form}
-            return render(request, 'hta_platform/create_post.html', context)
-
-
-def view_post(request, *args, **kwargs):
-    post_slug = kwargs.get("slug")
-
-    try:
-        post = Post.objects.get(slug=post_slug)
-    except Post.DoesNotExist():
-        return HttpResponse("Post doesn't exist")
-
-    if post:
-        context = {'post': post}
-        return render(request, 'hta_platform/view_post.html', context)
-
-
-@login_required
-def update_post(request, *args, **kwargs):
-    post_slug = kwargs.get("slug")
-    user = request.user
-
-    try:
-        post = Post.objects.get(slug=post_slug)
-    except Post.DoesNotExist():
-        return HttpResponse("Post doesn't exist")
-
-    if post and user == post.author.user:
-        post_form = PostForm(instance=post)
-
-        if request.method == 'POST':
-            post_form = PostForm(request.POST, instance=post)
-
-            if post_form.is_valid():
-                post = post_form.save(commit=False)
-                post.updated_at = datetime.datetime.now()
-                post.save()
-                return redirect('view_post', slug=post.slug)
-        context = {'form': post_form, 'post': post}
-        return render(request, 'hta_platform/update_post.html', context)
-
-
-@login_required
-def delete_post(request, slug):
-    Post.objects.filter(slug=slug).delete()
-    return redirect('home')
 
 
 def list_programs(request, *args, **kwargs):

@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'hta_platform.apps.HtaPlatformConfig',
+    'posts.apps.PostsConfig'
 ]
 
 MIDDLEWARE = [

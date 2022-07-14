@@ -1,12 +1,5 @@
 from django.contrib import admin
-from .models import Post, University, Student, StudentExam, Program, ProgramExam, Exam, Subject
-
-
-class PostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'slug', 'created_at')
-    # list_filter = ("status",)
-    search_fields = ['title', 'content']
-    prepopulated_fields = {'slug': ('title',)}
+from .models import University, Student, StudentExam, Program, ProgramExam, Exam, Subject
 
 
 class StudentAdmin(admin.ModelAdmin):
@@ -18,7 +11,6 @@ class StudentAdmin(admin.ModelAdmin):
     get_username.admin_order_field = 'user_username'
 
 
-admin.site.register(Post, PostAdmin)
 admin.site.register(University)
 admin.site.register(Student, StudentAdmin)
 admin.site.register(StudentExam)

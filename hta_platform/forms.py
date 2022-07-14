@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import University, Student, Post, Program, Exam, ProgramExam
+from .models import University, Student, Program, Exam, ProgramExam
 
 
 class AuthenticateUserForm(UserCreationForm):
@@ -60,7 +60,7 @@ class UniversityForm(forms.ModelForm):
         model = University
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'University Name'}),
-            'description' : forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'University Description'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'University Description'}),
             'website': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'Website Link'})
         }
         fields = ['name', 'description', 'website']
@@ -87,16 +87,6 @@ class EditStudentForm(forms.ModelForm):
                 attrs={'step': 0.01, 'class': 'form-control', 'placeholder': 'Obligatory Mark'}),
         }
         fields = ['age', 'obligatory_mark']
-
-
-class PostForm(forms.ModelForm):
-    class Meta:
-        model = Post
-        widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Title'}),
-            'content': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Write your post...'}),
-        }
-        fields = ['title', 'content']
 
 
 class ProgramForm(forms.ModelForm):
