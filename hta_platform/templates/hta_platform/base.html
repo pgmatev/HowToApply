@@ -16,12 +16,12 @@
         </button>
             <div class="collapse navbar-collapse m-3">
             {% if request.user.is_authenticated %}
-                <a class="navbar-text text-decoration-none" href="{% url 'profiles' user_id=request.user.id %}">Hi, {{ request.user.username }}</a>
+                <a class="navbar-text text-decoration-none" href="{% url 'hta_platform:profiles' user_id=request.user.id %}">Hi, {{ request.user.username }}</a>
             {% else %}
                 <div>
-                  <a class="btn btn-link" href="{% url 'student_register' %}">Sign Up</a>
-                  <a class="btn btn-link" href="{% url 'university_register' %}">Uni Sign Up</a>
-                  <a class="btn btn-primary" href="{% url 'login' %}">Login</a>
+                  <a class="btn btn-link" href="{% url 'hta_platform:student_register' %}">Sign Up</a>
+                  <a class="btn btn-link" href="{% url 'hta_platform:university_register' %}">Uni Sign Up</a>
+                  <a class="btn btn-primary" href="{% url 'hta_platform:login' %}">Login</a>
                 </div>
             {% endif %}
             </div>
@@ -43,7 +43,7 @@
 <script type="text/javascript">
 function executeQuery(){
     let query = document.getElementById("id_q").value
-    window.location.replace("{% url 'search' %}?q=" + query)
+    window.location.replace("{% url 'hta_platform:search' %}?q=" + query)
     return false
 }
 </script>

@@ -7,7 +7,7 @@
                 <h5 class="mb-0">{{ program.name }}</h5>
             </div>
             <div class="card-body">
-                <a href="{% url 'profiles' user_id=program.university.user.id %}">{{ program.university.name }}</a>
+                <a href="{% url 'hta_platform:profiles' user_id=program.university.user.id %}">{{ program.university.name }}</a>
                 {% if request.user == program.university.user %}
 {#                <a class="btn btn-secondary" href="{% url 'update_program' slug=post.slug %}">Edit</a>#}
                 {% endif %}
