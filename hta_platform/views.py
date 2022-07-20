@@ -8,8 +8,9 @@ from django.db.models import Q
 
 from .forms import UniversityForm, EditStudentForm, EditUserForm,\
                 AuthenticateUserForm, AuthenticateUniversityForm
-from .models import Student, University, User, Exam, StudentExam, Subject
+from .models import Student, University, User, StudentExam, Subject
 from posts.models import Post
+from exams.models import Exam
 
 from itertools import chain
 import datetime
@@ -159,7 +160,7 @@ def university_register(request):
             university.user = user
             university.save()
             # messages.success(request, 'Successfully added ' + university_form.cleaned_data.get('username'))
-            return redirect('login')
+            return redirect('hta_platform:login')
 
     context = {'form': form, 'university_form': university_form}
     return render(request, 'hta_platform/university_register.html', context)
@@ -174,7 +175,7 @@ def login_user(request):
 
         if user is not None:
             login(request, user)
-            return redirect('home')
+            return redirect('hta_platform:home')
         else:
             messages.info(request, 'Wrong credentials')
 
@@ -184,7 +185,7 @@ def login_user(request):
 @login_required
 def logout_user(request):
     logout(request)
-    return redirect('login')
+    return redirect('hta_platform:home')
 
 
 def search(request):

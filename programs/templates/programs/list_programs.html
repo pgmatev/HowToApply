@@ -1,7 +1,7 @@
 {% extends 'hta_platform/base.html' %}
 {% block content %}
     {% for program in programs %}
-    <a href="{% url 'programs:view_program' university_username=program.university.user.username program_id=program.id%}">{{ program.name }}</a>
+    <a href="{% url 'programs:view_program' program_id=program.id%}">{{ program.name }}</a>
     <p>by: {{ program.university.name }}</p>
     {% endfor %}
 {% endblock %}

@@ -21,5 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('hta_platform.urls')),
     path('', include('posts.urls')),
-    path('', include('programs.urls'))
+    path('programs/', include('programs.urls')),
+    path('', include('exams.urls'))
 ]

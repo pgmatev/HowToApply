@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'hta_platform.apps.HtaPlatformConfig',
     'posts.apps.PostsConfig',
-    'programs.apps.ProgramsConfig'
+    'programs.apps.ProgramsConfig',
+    'exams.apps.ExamsConfig'
 ]
 
 MIDDLEWARE = [

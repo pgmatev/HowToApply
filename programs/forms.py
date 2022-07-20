@@ -1,7 +1,7 @@
 from django import forms
 
 from .models import Program, ProgramExam
-from hta_platform.models import Exam
+from exams.models import Exam
 
 
 class ProgramForm(forms.ModelForm):
@@ -23,7 +23,7 @@ class ProgramExamForm(forms.ModelForm):
     #     super(ProgramExamForm, self).__init__(*args, **kwargs)
     #     self.fields['exam'].queryset = exams
 
-    exam = forms.ModelChoiceField(queryset=Exam.objects.none())
+    exam = forms.ModelChoiceField(queryset=Exam.objects.none(), empty_label='None', required=False)
     coef = forms.NumberInput()
 
     class Meta:
