@@ -8,7 +8,7 @@
             </div>
             <div class="card-body">
                 <small>Last update: {{ post.updated_at }}</small>
-                <a href="{% url 'profiles' user_id=post.author.user.id %}">{{ post.author.name }}</a>
+                <a href="{% url 'hta_platform:profiles' user_id=post.author.user.id %}">{{ post.author.name }}</a>
                 {% if request.user == post.author.user %}
                 <a class="btn btn-secondary" href="{% url 'posts:update_post' slug=post.slug %}">Edit</a>
                 {% endif %}

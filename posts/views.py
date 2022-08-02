@@ -68,4 +68,4 @@ def update_post(request, *args, **kwargs):
 @login_required
 def delete_post(request, slug):
     Post.objects.filter(slug=slug).delete()
-    return redirect('home')
+    return redirect('hta_platform:home')
