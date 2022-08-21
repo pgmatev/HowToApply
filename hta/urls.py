@@ -20,7 +20,7 @@ from hta_platform import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('hta_platform.urls')),
-    path('', include('posts.urls')),
+    path('posts/', include('posts.urls')),
     path('programs/', include('programs.urls')),
-    path('', include('exams.urls'))
+    path('exams/', include('exams.urls'))
 ]

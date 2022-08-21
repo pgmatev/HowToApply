@@ -13,7 +13,7 @@ class Program(models.Model):
     obligatory_coef = models.FloatField(
         validators=[MinValueValidator(0.0), MaxValueValidator(3.0)]
     )
-    exams = models.ManyToManyField(Exam, through='ProgramExam', null=True)
+    exams = models.ManyToManyField(Exam, through='ProgramExam')
 
     def __str__(self):
         return self.name

@@ -10,6 +10,7 @@ from .forms import UniversityForm, EditStudentForm, EditUserForm,\
                 AuthenticateUserForm, AuthenticateUniversityForm
 from .models import Student, University, User, StudentExam, Subject
 from posts.models import Post
+from programs.models import Program
 from exams.models import Exam
 
 from itertools import chain
@@ -194,16 +195,19 @@ def search(request):
     if request.method == 'GET':
         search_query = request.GET.get("q")
         if len(search_query) > 0:
-            print(search_query)
             search_students = Student.objects.filter(Q(user__username__icontains=search_query) |
                                                      Q(user__email__icontains=search_query) |
                                                      Q(user__first_name__icontains=search_query) |
                                                      Q(user__last_name__icontains=search_query))
             search_universities = University.objects.filter(Q(user__username__icontains=search_query) |
                                                             Q(name__icontains=search_query))
-            print(search_students)
+            print("hi")
+            search_programs = Program.objects.filter(Q(name__icontains=search_query) |
+                                                        Q(description__icontains=search_query))
+            print(search_programs)
             search_results = list(chain(search_students, search_universities))
             context['search_results'] = search_results
             context['search_query'] = search_query
+            context['search_programs'] = search_programs
 
     return render(request, 'hta_platform/search_results.html', context)
