@@ -99,7 +99,7 @@ def edit_profile(request):
                     user = edit_user_form.save()
                     user.student = edit_student_form.save()
 
-                    return redirect(request, 'profiles', user.id)
+                    return redirect('hta_platform:profiles', user.id)
 
             context = {'edit_user_form': edit_user_form, 'edit_student_form': edit_student_form, 'user': user}
             return render(request, 'hta_platform/edit_student_profile.html', context)
@@ -117,7 +117,7 @@ def edit_profile(request):
                     # user = edit_user_form.save()
                     user.university = edit_university_form.save()
 
-                    return redirect('profiles', user.id)
+                    return redirect('hta_platform:profiles', user.id)
 
             context = {'edit_university_form': edit_university_form, 'user': user}
             return render(request, 'hta_platform/edit_university_profile.html', context)
@@ -138,7 +138,7 @@ def student_register(request):
             user = form.save()
             student = Student.objects.create(user=user)
             student.save()
-            return redirect('login')
+            return redirect('hta_platform:login')
 
     context = {'form': form}
     return render(request, 'hta_platform/student_register.html', context)

@@ -85,5 +85,6 @@ class EditStudentForm(forms.ModelForm):
             'age': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Age'}),
             'obligatory_mark': forms.NumberInput(
                 attrs={'step': 0.01, 'class': 'form-control', 'placeholder': 'Obligatory Mark'}),
+            'bio': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Bio'}),
         }
-        fields = ['age', 'obligatory_mark']
+        fields = ['age', 'obligatory_mark', 'bio']

@@ -26,6 +26,7 @@ class University(models.Model):
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     age = models.IntegerField(null=True)
+    bio = models.TextField(null=True, blank=True)
     obligatory_mark = models.DecimalField(null=True, max_digits=3, decimal_places=2,
                                            validators=[MinValueValidator(2.00), MaxValueValidator(6.00)])
     exams = models.ManyToManyField("exams.Exam", through='StudentExam')

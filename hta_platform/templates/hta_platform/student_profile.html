@@ -1,16 +1,57 @@
 {% extends "hta_platform/base.html" %}
 {% block content %}
-    <div>
-        <h1>Profile</h1>
-        <p>Username: {{ user.username }}</p>
-        <p>Name: {{ user.first_name }}</p>
-        <p>Surname: {{ user.last_name }}</p>
-        <p>Email: {{ user.email }}</p>
-        <p>Age: {{ user.student.age }}</p>
-        <p>Obligatory Mark: {{ user.student.obligatory_mark }}</p>
-        {% if request.user == user %}
-       <a class="btn btn-primary" href="{% url 'hta_platform:edit_profile' %}">Edit</a>
-        <a class="btn btn-secondary" href="{% url 'hta_platform:logout' %}">Logout</a>
-        {% endif %}
+{#    <div>#}
+{#        <h1>Profile</h1>#}
+{#        <p>Username: {{ user.username }}</p>#}
+{#        <p>Name: {{ user.first_name }}</p>#}
+{#        <p>Surname: {{ user.last_name }}</p>#}
+{#        <p>Email: {{ user.email }}</p>#}
+{#        <p>Age: {{ user.student.age }}</p>#}
+{#        <p>Obligatory Mark: {{ user.student.obligatory_mark }}</p>#}
+{#        <p>Bio: {{ user.student.bio }}</p>#}
+{#        {% if request.user == user %}#}
+{#       <a class="btn btn-primary" href="{% url 'hta_platform:edit_profile' %}">Edit</a>#}
+{#        <a class="btn btn-secondary" href="{% url 'hta_platform:logout' %}">Logout</a>#}
+{#        {% endif %}#}
+{#    </div>#}
+    <div class="container" style="margin-top: 40px">
+        <div class="row text-center">
+            <div class="col-md-12">
+                <h1>{{ user.first_name }} {{ user.last_name }}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="border rounded border-2" style="padding: 10px">
+                    <p>{{ user.student.bio }}</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="border rounded border-2" style="padding: 10px">
+                    <p>
+                        <i class="far fa-user" style="padding-right: 10px"></i>
+                        <span>{{ user.username }}</span>
+                    </p>
+                    <p>
+                        <i class="far fa-envelope" style="padding-right: 10px"></i>
+                        <span>{{ user.email }}</span>
+                    </p>
+                    <p>
+                        <i class="far fa-id-card" style="padding-right: 10px"></i>
+                        <span>{{ user.student.age }} years old</span>
+                    </p>
+                    <p>
+                        <i class="fas fa-user-graduate" style="padding-right: 10px"></i>
+                        <span>{{ user.student.obligatory_mark }} / 6.00</span>
+                    </p>
+                    {% if request.user == user %}
+                        <div class="btn-group" role="group">
+                            <a class="btn btn-primary" href="{% url 'hta_platform:edit_profile' %}">Edit</a>
+                            <a class="btn btn-secondary" href="{% url 'hta_platform:logout' %}">Logout</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
