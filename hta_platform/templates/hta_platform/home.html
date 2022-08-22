@@ -1,5 +1,7 @@
 {% extends 'hta_platform/base.html' %}
 {% block content %}
-    <h1>Welcome to How To Apply</h1>
-    <p>Please login</p>
+    <div class="container text-center mt-4">
+        <h1>Welcome to How To Apply</h1>
+        <a class="text-decoration-none" href="{% url 'hta_platform:login' %}">Please login</a>
+    </div>
 {% endblock %}

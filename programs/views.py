@@ -9,14 +9,18 @@ from .forms import ProgramForm, ProgramExamForm
 
 def list_programs(request, *args, **kwargs):
     university_username = kwargs.get("university_username")
-    print(university_username)
     try:
         user = User.objects.get(username=university_username)
     except User.DoesNotExist():
         return HttpResponse("User doesn't exist")
 
-    programs = Program.objects.filter(university=user.university)
-    context = {'university': user.university, 'programs': programs}
+    programs = Program.objects.filter(university=user.university).order_by('name')
+
+    program_letters = []
+    for program in programs:
+        if program.name[0] not in program_letters:
+            program_letters.append(program.name[0])  # first letter of the programs so to form a dictionary
+    context = {'university': user.university, 'programs': programs, 'program_letters': program_letters}
     return render(request, 'programs/list_programs.html', context)
 
 
@@ -66,7 +70,7 @@ def create_program(request):
                     #     program_exam = form.save(commit=False)
                     #     program_exam.program = program
                     #     program_exam.save()
-                    return redirect('programs:view_program', university_username=user.username, program_id=program.id)
+                    return redirect('programs:view_program', program_id=program.id)
 
             context = {'program_form': program_form}
             return render(request, 'programs/create_program.html', context)

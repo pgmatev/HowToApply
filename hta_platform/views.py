@@ -71,7 +71,7 @@ def profile(request, *args, **kwargs):
             return render(request, 'hta_platform/student_profile.html', context)
 
         elif hasattr(user, 'university'):
-            posts = Post.objects.filter(author=user.university)
+            posts = Post.objects.filter(author=user.university).order_by('-created_at')  # the '-' reverses the order
             context = {'university': user.university, 'posts': posts}
             return render(request, 'hta_platform/university_profile.html', context)
 
