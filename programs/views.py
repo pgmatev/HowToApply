@@ -33,47 +33,57 @@ def view_program(request, *args, **kwargs):
         return HttpResponse("Post doesn't exist")
 
     if program:
-        context = {'program': program}
+        program_exams = ProgramExam.objects.filter(program=program)
+        context = {'program': program, 'program_exams': program_exams}
         return render(request, 'programs/view_program.html', context)
 
 
 @login_required
 def create_program(request):
     user = request.user
-    program_form = ProgramForm()
-    # ProgramExamFormset = modelformset_factory(ProgramExam, form=ProgramExamForm, extra=2)
-    # formset = ProgramExamFormset() #TODO in create_program create only program,
-                                   # have another view with formset for creating program exams
-    # exams = user.university.exam_set.all()
-    # for form in formset:
-    #     form.fields['exam'].queryset = exams
-    # print(exams)
-    # program_exam_form = ProgramExamForm()
-    # program_exam_form.fields['exam'].queryset = exams
+    program_form = ProgramForm(request.POST or None)
+    if user:
+        if hasattr(user, 'university'):
+            if request.method == 'POST':
+                if program_form.is_valid():
+                    program = program_form.save(commit=False)
+                    program.university = user.university
+                    program.save()
+
+                    return redirect('programs:create_program_exam', program_id=program.id)
+
+            context = {'program_form': program_form}
+            return render(request, 'programs/create_program.html', context)
+
+
+@login_required
+def create_program_exam(request, *args, **kwargs):
+    program_id = kwargs.get("program_id")
+    program = Program.objects.get(id=program_id)
+
+    user = request.user
+
+    ProgramExamFormset = modelformset_factory(ProgramExam, form=ProgramExamForm)
+    qs = program.programexam_set.all()
+    formset = ProgramExamFormset(request.POST or None, queryset=qs)
+
+    exams = user.university.exam_set.all()
+    for form in formset:
+        form.fields['exam'].queryset = exams
 
     if user:
         if hasattr(user, 'university'):
             if request.method == 'POST':
-                program_form = ProgramForm(request.POST)
-                # formset = ProgramExamFormset(request.POST)
+                if formset.is_valid():
+                    for form in formset:
+                        program_exam = form.save(commit=False)
+                        program_exam.program = program
+                        program_exam.save()
 
-                # program_exam_form = ProgramExamForm(request.POST)
-                # program_exam_form.fields['exam'].queryset = exams
+                return redirect('programs:view_program', program_id=program.id)
 
-                if program_form.is_valid():
-                    program = program_form.save(commit=False)
-                    program.university = user.university
-                    # program_exam = program_exam_form.save(commit=False)
-                    # program_exam.program = program
-                    program.save()
-                    # for form in formset:
-                    #     program_exam = form.save(commit=False)
-                    #     program_exam.program = program
-                    #     program_exam.save()
-                    return redirect('programs:view_program', program_id=program.id)
-
-            context = {'program_form': program_form}
-            return render(request, 'programs/create_program.html', context)
+            context = {'formset': formset, 'program': program}
+            return render(request, 'programs/create_program_exam.html', context)
 
 
 @login_required

@@ -11,19 +11,10 @@
                     </label>
                 </div>
             {% endfor %}
-{#            {% for many_to_many_field in program_exam_form %}#}
-{#                <div class="form-group m-2">#}
-{#                    <label for="">{{ many_to_many_field.label }}#}
-{#                        {{ many_to_many_field }}#}
-{#                    </label>#}
-{#                </div>#}
-{#            {% endfor %}#}
-{#            {% for form in formset %}#}
-{#                {{ form.as_p }}#}
-{#            {% endfor %}#}
-{#            {{ form.errors }}#}
-{#            {{ program_form.errors }}#}
-            <input class="btn btn-primary m-2" type="submit" name="Create University">
+            {{ program_form.errors }}
+            <small>You can add the exams required for this program in the next page.</small>
+            <br>
+            <input class="btn btn-primary m-2" type="submit" name="Create Program">
         </form>
     </div>
 {% endblock %}

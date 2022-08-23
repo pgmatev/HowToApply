@@ -11,7 +11,10 @@
                 {% if request.user == program.university.user %}
                 <a class="btn btn-secondary" href="{% url 'programs:update_program' program_id=program.id %}">Edit</a>
                 {% endif %}
-                <p class="card-text">{{ post.content }}</p>
+                {% for program_exam in program_exams %}
+                    <p>{{ program_exam.exam.name }}</p>
+                {% endfor %}
+
 
             </div>
         </div>
