@@ -4,15 +4,10 @@
         <h1 class="m-4">Add exams to {{ program.name }}</h1>
         <form method="POST" action="">
             {% csrf_token %}
-{#            {% for many_to_many_field in program_exam_form %}#}
-{#                <div class="form-group m-2">#}
-{#                    <label for="">{{ many_to_many_field.label }}#}
-{#                        {{ many_to_many_field }}#}
-{#                    </label>#}
-{#                </div>#}
-{#            {% endfor %}#}
+            {{ formset.management_form }}
             {% for form in formset %}
                 {{ form.as_p }}
+                {{ form.errors }}
             {% endfor %}
             <small>You can skip by pressing submit.</small>
             <input class="btn btn-primary m-2" type="submit" name="Create University">

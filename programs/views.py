@@ -50,24 +50,25 @@ def create_program(request):
                     program.university = user.university
                     program.save()
 
-                    return redirect('programs:create_program_exam', program_id=program.id)
+                    return redirect('programs:add_exam', program_id=program.id)
 
             context = {'program_form': program_form}
             return render(request, 'programs/create_program.html', context)
 
 
+# noinspection PyArgumentList
 @login_required
-def create_program_exam(request, *args, **kwargs):
+def add_exam(request, *args, **kwargs):
     program_id = kwargs.get("program_id")
     program = Program.objects.get(id=program_id)
 
     user = request.user
-
-    ProgramExamFormset = modelformset_factory(ProgramExam, form=ProgramExamForm)
-    qs = program.programexam_set.all()
-    formset = ProgramExamFormset(request.POST or None, queryset=qs)
-
     exams = user.university.exam_set.all()
+
+    program_exam_formset = modelformset_factory(ProgramExam, form=ProgramExamForm, extra=1)
+    qs = program.programexam_set.all()
+    formset = program_exam_formset(request.POST or None, queryset=qs)
+
     for form in formset:
         form.fields['exam'].queryset = exams
 
@@ -76,14 +77,38 @@ def create_program_exam(request, *args, **kwargs):
             if request.method == 'POST':
                 if formset.is_valid():
                     for form in formset:
-                        program_exam = form.save(commit=False)
-                        program_exam.program = program
-                        program_exam.save()
+                        if form.is_valid() and form.has_changed():
+                            program_exam = form.save(commit=False)
+                            program_exam.program = program
+                            program_exam.save()
 
-                return redirect('programs:view_program', program_id=program.id)
+                    return redirect('programs:view_program', program_id=program.id)
 
             context = {'formset': formset, 'program': program}
-            return render(request, 'programs/create_program_exam.html', context)
+            return render(request, 'programs/add_exam.html', context)
+# @login_required
+# def add_exam(request, *args, **kwargs):
+#     program_id = kwargs.get("program_id")
+#     program = Program.objects.get(id=program_id)
+#
+#     user = request.user
+#     exams = user.university.exam_set.all()
+#
+#     program_exam_form = ProgramExamForm(request.POST or None)
+#     program_exam_form.fields['exam'].queryset = exams
+#
+#     if user:
+#         if hasattr(user, 'university'):
+#             if request.method == 'POST':
+#                 if program_exam_form.is_valid():
+#                     program_exam = program_exam_form.save(commit=False)
+#                     program_exam.program = program
+#                     program_exam.save()
+#
+#                     return redirect('programs:view_program', program_id=program.id)
+#
+#             context = {'program_exam_form': program_exam_form, 'program': program}
+#             return render(request, 'programs/add_exam.html', context)
 
 
 @login_required
@@ -104,6 +129,6 @@ def update_program(request, *args, **kwargs):
 
             if program_form.is_valid():
                 program = program_form.save()
-                return redirect('programs:view_program', id=program.id)
+                return redirect('programs:add_exam', program_id=program.id)
         context = {'form': program_form, 'program': program}
         return render(request, 'programs/update_program.html', context)

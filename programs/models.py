@@ -27,4 +27,4 @@ class ProgramExam(models.Model):
     )
 
     class Meta:
-        unique_together = [['program', 'exam']]
+        unique_together = ('program', 'exam')

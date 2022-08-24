@@ -12,7 +12,7 @@
                 <a class="btn btn-secondary" href="{% url 'programs:update_program' program_id=program.id %}">Edit</a>
                 {% endif %}
                 {% for program_exam in program_exams %}
-                    <p>{{ program_exam.exam.name }}</p>
+                    <p>{{ program_exam.exam.name }} {{ program_exam.coef }}</p>
                 {% endfor %}
 
 
