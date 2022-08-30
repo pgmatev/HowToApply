@@ -14,7 +14,7 @@
                 {% endfor %}
                 {{ form.errors }}
             <button type="submit" class="btn btn-primary m-2" name="Update Program">Next</button>
-{#            <a href="{% url 'delete_post' slug=post.slug %}" class="btn btn-secondary m-2">Delete</a>#}
+            <a href="{% url 'programs:delete_program' program_id=program.id %}" class="btn btn-secondary m-2">Delete</a>
         </form>
     </div>
 {% endblock %}

@@ -21,8 +21,8 @@
                     <h4 class="card-title">{{ university.name }}</h4>
                     <a href="{{ university.website }}" class="text-muted card-subtitle mb-2 text-decoration-none">{{ university.website }}</a>
                     <p class="card-text">{{ university.description }}</p>
-                    <a href="{% url 'programs:list_programs' university_username=university.user.username%}" class="btn btn-primary">Programs</a>
-                    <a href="#" class="btn btn-primary">Exams</a>
+                    <a href="{% url 'programs:list_programs' university_username=university.user.username %}" class="btn btn-primary">Programs</a>
+                    <a href="{% url 'exams:list_programs' university_username=university.user.username %}" class="btn btn-primary">Exams</a>
                     {% if request.user == university.user %}
                     <a href="{% url 'hta_platform:logout' %}" class="btn btn-secondary">Logout</a>
                     <a href="{% url 'hta_platform:edit_profile' %}" class="btn btn-secondary">Edit</a>

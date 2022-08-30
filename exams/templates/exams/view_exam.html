@@ -1,0 +1,18 @@
+{% extends 'hta_platform/base.html' %}
+{% block content %}
+
+    <div class="container">
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">{{ exam.name }}</h5>
+            </div>
+            <div class="card-body">
+                <a href="{% url 'hta_platform:profiles' user_id=exam.university.user.id %}">{{ exam.university.name }}</a>
+                <p>{{ exam.exam_date }}</p>
+{#                {% if request.user == program.university.user %}#}
+{#                <a class="btn btn-secondary" href="{% url 'exam:update_exam' exam_id=exam.id %}">Edit</a>#}
+{#                {% endif %}#}
+            </div>
+        </div>
+    </div>
+{% endblock %}

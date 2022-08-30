@@ -3,6 +3,7 @@
     <p>University</p>
     <a href="{% url 'posts:create_post' %}">Create post</a>
     <a href="{% url 'programs:create_program' %}">Create program</a>
+    <a href="{% url 'exams:create_exam' %}">Create exam</a>
     <h1>Your posts</h1>
     {% for post in posts %}
         <br>

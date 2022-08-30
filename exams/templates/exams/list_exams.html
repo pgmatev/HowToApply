@@ -1,0 +1,26 @@
+{% extends 'hta_platform/base.html' %}
+{% block content %}
+    <div class="container mt-4">
+        <div class="row text-center">
+            <div class="col-md-12 text-center">
+                <h1>Exams by {{ university.name }}:</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+            {% for subject in subjects %}
+                <p>{{ subject.subject }}</p>
+                <div class="mb-4">
+                {% for exam in exams %}
+                    {% if exam.subject == subject %}
+                            <a class="m-2" href="{% url 'exams:view_exam' exam_id=exam.id %}">{{ exam.name }}</a>
+                    {% endif %}
+                {% endfor %}
+                </div>
+                <br>
+            {% endfor %}
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
