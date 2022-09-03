@@ -4,17 +4,21 @@
         <div class="row text-center">
             <div class="col-md-12 text-center">
                 <h1>Exams by {{ university.name }}:</h1>
+                <h4>in Blue - Upcoming exams, in Green - Past exams</h4>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
-            {% for subject in subjects %}
-                <p>{{ subject.subject }}</p>
+            {% for key, value in exams.items %}
+                <p>{{ key }}</p>
                 <div class="mb-4">
-                {% for exam in exams %}
-                    {% if exam.subject == subject %}
-                            <a class="m-2" href="{% url 'exams:view_exam' exam_id=exam.id %}">{{ exam.name }}</a>
+                {% for exam in value %}
+                    {% if exam.is_upcoming %}
+                        <a class="m-2" href="{% url 'exams:view_exam' exam_id=exam.id %}">{{ exam.name }}</a>
+                    {% else %}
+                        <a class="m-2 link-success" href="{% url 'exams:view_exam' exam_id=exam.id %}">{{ exam.name }}</a>
                     {% endif %}
+
                 {% endfor %}
                 </div>
                 <br>

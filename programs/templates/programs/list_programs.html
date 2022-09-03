@@ -8,13 +8,11 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-            {% for letter in program_letters %}
-                <p>{{ letter }}</p>
+            {% for key, value in programs.items %}
+                <p>{{ key }}</p>
                 <div class="mb-4">
-                {% for program in programs %}
-                    {% if letter == program.name|slice:1 %}
-                            <a class="m-2" href="{% url 'programs:view_program' program_id=program.id%}">{{ program.name }}</a>
-                    {% endif %}
+                {% for program in value %}
+                    <a class="m-2" href="{% url 'programs:view_program' program_id=program.id%}">{{ program.name }}</a>
                 {% endfor %}
                 </div>
                 <br>

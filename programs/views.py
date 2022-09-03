@@ -15,12 +15,11 @@ def list_programs(request, *args, **kwargs):
         return HttpResponse("User doesn't exist")
 
     programs = Program.objects.filter(university=user.university).order_by('name')
-
-    program_letters = []
+    programs_dict = {}
     for program in programs:
-        if program.name[0] not in program_letters:
-            program_letters.append(program.name[0])  # first letter of the programs so to form a dictionary
-    context = {'university': user.university, 'programs': programs, 'program_letters': program_letters}
+        programs_dict.setdefault(program.name[0], []).append(program)
+
+    context = {'university': user.university, 'programs': programs_dict}
     return render(request, 'programs/list_programs.html', context)
 
 
@@ -74,6 +73,7 @@ def add_exam(request, *args, **kwargs):
     if user:
         if hasattr(user, 'university'):
             if request.method == 'POST':
+                print(request.POST)
                 if formset.is_valid():
                     for form in formset:
                         if form.is_valid() and form.has_changed():
@@ -138,5 +138,16 @@ def update_program(request, *args, **kwargs):
 @login_required
 def delete_program(request, *args, **kwargs):
     program_id = kwargs.get("program_id")
-    Program.objects.filter(id=program_id).delete()
-    return redirect('programs:list_programs', university_username=request.user.username)
+    user = request.user
+
+    try:
+        program = Program.objects.get(id=program_id)
+    except Program.DoesNotExist():
+        return HttpResponse("Post doesn't exist")
+
+    if program and user == program.university.user:
+        program.delete()
+
+        return redirect('programs:list_programs', university_username=request.user.username)
+    else:
+        return redirect('programs:view_program', program_id=program.id)

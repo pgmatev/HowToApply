@@ -6,6 +6,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 # Exam = apps.get_model('exams', 'Exam')
 
+
 class Subject(models.Model):
     subject = models.CharField(max_length=100)
 
@@ -28,7 +29,7 @@ class Student(models.Model):
     age = models.IntegerField(null=True)
     bio = models.TextField(null=True, blank=True)
     obligatory_mark = models.DecimalField(null=True, max_digits=3, decimal_places=2,
-                                           validators=[MinValueValidator(2.00), MaxValueValidator(6.00)])
+                                          validators=[MinValueValidator(2.00), MaxValueValidator(6.00)])
     exams = models.ManyToManyField("exams.Exam", through='StudentExam')
 
     def __str__(self):
@@ -39,4 +40,13 @@ class StudentExam(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     exam = models.ForeignKey("exams.Exam", on_delete=models.DO_NOTHING)
     mark = models.DecimalField(null=True, max_digits=3, decimal_places=2,
-                                validators=[MinValueValidator(2.00), MaxValueValidator(6.00)])
+                               validators=[MinValueValidator(2.00), MaxValueValidator(6.00)])
+
+    class Meta:
+        unique_together = ('student', 'exam')
+
+    # @classmethod
+    # def create(cls, student, exam):
+    #     student_exam = cls(student=student, exam=exam)
+    #
+    #     return student_exam

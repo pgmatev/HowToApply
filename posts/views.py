@@ -67,5 +67,16 @@ def update_post(request, *args, **kwargs):
 
 @login_required
 def delete_post(request, slug):
-    Post.objects.filter(slug=slug).delete()
-    return redirect('hta_platform:home')
+    user = request.user
+
+    try:
+        post = Post.objects.get(slug=slug)
+    except Post.DoesNotExist():
+        return HttpResponse("Post doesn't exist")
+
+    if post and user == post.author.user:
+        post.delete()
+
+        return redirect('hta_platform:profiles', user_id=user.id)
+    else:
+        return redirect('posts:view_post', slug=post.slug)

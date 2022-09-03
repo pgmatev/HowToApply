@@ -9,9 +9,16 @@
             <div class="card-body">
                 <a href="{% url 'hta_platform:profiles' user_id=exam.university.user.id %}">{{ exam.university.name }}</a>
                 <p>{{ exam.exam_date }}</p>
-{#                {% if request.user == program.university.user %}#}
-{#                <a class="btn btn-secondary" href="{% url 'exam:update_exam' exam_id=exam.id %}">Edit</a>#}
-{#                {% endif %}#}
+            {% if request.user.student %}
+                {% if is_registered %}
+                    <p>You are registered</p>
+                {% elif exam.is_upcoming %}
+                    <a class="btn" href={% url 'exams:student_exam_register' exam_id=exam.id %}>Register for Exam</a>
+                {% endif %}
+            {% endif %}
+                {% if request.user == exam.university.user %}
+                <a class="btn btn-secondary" href="{% url 'exams:update_exam' exam_id=exam.id %}">Edit</a>
+                {% endif %}
             </div>
         </div>
     </div>
