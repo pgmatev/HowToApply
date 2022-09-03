@@ -40,13 +40,17 @@ def home(request):
     if user:
 
         if hasattr(user, 'student'):
-            context = {'user': user, 'student': user.student}
+            student_exams = StudentExam.objects.filter(student=user.student)
+
+            context = {'user': user, 'student_exams': student_exams}
             return render(request, 'hta_platform/student_home.html', context)
 
         elif hasattr(user, 'university'):
-            posts = Post.objects.filter(author_id=user.university.id)
-            print(posts)
-            context = {'user': user, 'student': user.university, 'posts': posts}
+            posts = list(Post.objects.filter(author=user.university))
+            programs = list(Program.objects.filter(university=user.university))
+            exams = list(Exam.objects.filter(university=user.university))
+
+            context = {'user': user, 'student': user.university, 'posts': posts, 'programs': programs, 'exams': exams}
             return render(request, 'hta_platform/university_home.html', context)
 
         else:

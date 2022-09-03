@@ -1,4 +1,8 @@
 {% extends 'hta_platform/base.html' %}
 {% block content %}
-    <p>Student</p>
+    <p>you are registered for</p>
+    {% for exam in student_exams %}
+        <a href={% url 'exams:view_exam' exam_id=exam.exam.id %}>{{ exam.exam.name }}</a>
+        <br>
+    {% endfor %}
 {% endblock %}

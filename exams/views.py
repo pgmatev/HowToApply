@@ -110,7 +110,7 @@ def student_exam_register(request, *args, **kwargs):
         except Exam.DoesNotExist():
             return HttpResponse("Exam doesn't exist")
 
-        if not StudentExam.objects.filter(student=user.student, exam=exam).exists():
+        if not StudentExam.objects.filter(student=user.student, exam=exam).exists() and exam.is_upcoming:
             student_exam = StudentExam()
             student_exam.student = user.student
             student_exam.exam = exam
