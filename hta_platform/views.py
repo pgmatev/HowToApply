@@ -8,10 +8,10 @@ from django.db.models import Q
 
 from .forms import UniversityForm, EditStudentForm, EditUserForm,\
                 AuthenticateUserForm, AuthenticateUniversityForm
-from .models import Student, University, User, StudentExam, Subject
+from .models import Student, University, User, Subject
 from posts.models import Post
 from programs.models import Program
-from exams.models import Exam
+from exams.models import Exam, StudentExam
 
 from itertools import chain
 import datetime

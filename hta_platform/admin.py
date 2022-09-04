@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import University, Student, StudentExam, Subject
+from .models import University, Student, Subject
 
 
 class StudentAdmin(admin.ModelAdmin):
@@ -13,6 +13,4 @@ class StudentAdmin(admin.ModelAdmin):
 
 admin.site.register(University)
 admin.site.register(Student, StudentAdmin)
-admin.site.register(StudentExam)
-
 admin.site.register(Subject)

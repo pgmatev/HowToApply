@@ -1,19 +1,5 @@
 {% extends "hta_platform/base.html" %}
 {% block content %}
-{#    <div>#}
-{#        <h1>Profile</h1>#}
-{#        <p>Username: {{ user.username }}</p>#}
-{#        <p>Name: {{ user.first_name }}</p>#}
-{#        <p>Surname: {{ user.last_name }}</p>#}
-{#        <p>Email: {{ user.email }}</p>#}
-{#        <p>Age: {{ user.student.age }}</p>#}
-{#        <p>Obligatory Mark: {{ user.student.obligatory_mark }}</p>#}
-{#        <p>Bio: {{ user.student.bio }}</p>#}
-{#        {% if request.user == user %}#}
-{#       <a class="btn btn-primary" href="{% url 'hta_platform:edit_profile' %}">Edit</a>#}
-{#        <a class="btn btn-secondary" href="{% url 'hta_platform:logout' %}">Logout</a>#}
-{#        {% endif %}#}
-{#    </div>#}
     <div class="container" style="margin-top: 40px">
         <div class="row text-center">
             <div class="col-md-12">
@@ -23,7 +9,12 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="border rounded border-2" style="padding: 10px">
-                    <p>{{ user.student.bio }}</p>
+                    {% if user.student.bio %}
+                        <p>{{ user.student.bio }}</p>
+                    {% else %}
+                        <p>No biography</p>
+                    {% endif %}
+
                 </div>
             </div>
             <div class="col-md-6">

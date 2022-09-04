@@ -1,25 +1,65 @@
 {% extends 'hta_platform/base.html' %}
 {% block content %}
-
     <div class="container">
-        <div class="card mt-4">
-            <div class="card-header">
-                <h5 class="mb-0">{{ exam.name }}</h5>
-            </div>
-            <div class="card-body">
-                <a href="{% url 'hta_platform:profiles' user_id=exam.university.user.id %}">{{ exam.university.name }}</a>
-                <p>{{ exam.exam_date }}</p>
-            {% if request.user.student %}
-                {% if is_registered %}
-                    <p>You are registered</p>
-                {% elif exam.is_upcoming %}
-                    <a class="btn" href={% url 'exams:student_exam_register' exam_id=exam.id %}>Register for Exam</a>
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0">{{ exam.name }}</h5>
+                </div>
+                <div class="card-body">
+                    <a href="{% url 'hta_platform:profiles' user_id=exam.university.user.id %}">{{ exam.university.name }}</a>
+                    <p>{{ exam.exam_date }} | Registration deadline: {{ exam.deadline }}</p>
+                    {% if exam.description %}
+                        <p>{{ exam.description }}</p>
+                    {% else %}
+                        <p>No description.</p>
+                    {% endif %}
+                {% if request.user.student %}
+                    {% if is_registered %}
+                        <p>You are registered</p>
+                    {% elif not exam.past_deadline %}
+                        <a class="btn" href={% url 'exams:student_exam_register' exam_id=exam.id %}>Register for Exam</a>
+                    {% endif %}
                 {% endif %}
-            {% endif %}
-                {% if request.user == exam.university.user %}
-                <a class="btn btn-secondary" href="{% url 'exams:update_exam' exam_id=exam.id %}">Edit</a>
-                {% endif %}
+                    {% if request.user == exam.university.user %}
+                    <a class="btn btn-secondary" href="{% url 'exams:update_exam' exam_id=exam.id %}">Edit</a>
+                    {% endif %}
+                </div>
             </div>
-        </div>
+        {% if request.user == exam.university.user %}
+            <table class="table mt-2">
+            <thead>
+                <tr>
+                    <th>Registered students {{ students_count }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if registered_students %}
+                    {% for registered_student in registered_students %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'hta_platform:profiles' user_id=registered_student.user.id%}" class="text-decoration-none link-dark">
+                                    {{ registered_student.user.first_name}} {{ registered_student.user.last_name }}
+                                </a>
+                            </td>
+                            {% if not exam.is_upcoming %}
+                                <td>
+                                    <a href="#">Mark</a>
+                                </td>
+                            {% else %}
+{#                                <td>#}
+{#                                registered at: {{ registered_student }}#}
+{#                                </td>#}
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td>None</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+
+            </table>
+        {% endif %}
     </div>
 {% endblock %}

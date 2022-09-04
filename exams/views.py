@@ -2,8 +2,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
-from hta_platform.models import User, Subject, Student, StudentExam
-from .models import Exam
+from hta_platform.models import User, Subject, Student
+from .models import Exam, StudentExam
 from .forms import ExamForm
 
 
@@ -90,12 +90,20 @@ def view_exam(request, *args, **kwargs):
 
     user = request.user
     is_registered = False
+    registered_students = []
+    students_count = 0
 
-    if user and hasattr(user, "student"):
-        if StudentExam.objects.filter(student=user.student, exam=exam).exists():
-            is_registered = True
+    if user:
+        if hasattr(user, "student"):
+            if StudentExam.objects.filter(student=user.student, exam=exam).exists():
+                is_registered = True
+        if hasattr(user, "university"):
+            if exam.university == user.university:
+                registered_students = list(Student.objects.filter(exams__id=exam.id).order_by("user__first_name"))
+                students_count = len(registered_students)
 
-    context = {'exam': exam, 'is_registered': is_registered}
+    context = {'exam': exam, 'is_registered': is_registered, 'registered_students': registered_students,
+               'students_count': students_count}
     return render(request, 'exams/view_exam.html', context)
 
 
@@ -110,7 +118,7 @@ def student_exam_register(request, *args, **kwargs):
         except Exam.DoesNotExist():
             return HttpResponse("Exam doesn't exist")
 
-        if not StudentExam.objects.filter(student=user.student, exam=exam).exists() and exam.is_upcoming:
+        if not StudentExam.objects.filter(student=user.student, exam=exam).exists() and not exam.past_deadline:
             student_exam = StudentExam()
             student_exam.student = user.student
             student_exam.exam = exam
