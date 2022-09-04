@@ -82,9 +82,9 @@ class EditStudentForm(forms.ModelForm):
     class Meta:
         model = Student
         widgets = {
-            'age': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Age'}),
+            'birthday': forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'Date of birth', 'type': 'date'}),
             'obligatory_mark': forms.NumberInput(
                 attrs={'step': 0.01, 'class': 'form-control', 'placeholder': 'Obligatory Mark'}),
             'bio': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Bio'}),
         }
-        fields = ['age', 'obligatory_mark', 'bio']
+        fields = ['birthday', 'obligatory_mark', 'bio']

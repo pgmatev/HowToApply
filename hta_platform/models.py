@@ -1,5 +1,6 @@
 from django.db import models
 # from django.apps import apps
+from django.utils import timezone
 
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -26,7 +27,7 @@ class University(models.Model):
 
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    age = models.IntegerField(null=True)
+    birthday = models.DateField()
     bio = models.TextField(null=True, blank=True)
     obligatory_mark = models.DecimalField(null=True, max_digits=3, decimal_places=2,
                                           validators=[MinValueValidator(2.00), MaxValueValidator(6.00)])
@@ -34,3 +35,8 @@ class Student(models.Model):
 
     def __str__(self):
         return self.user.username
+
+    @property
+    def calculate_age(self):
+        diff = timezone.now().date() - self.birthday
+        return int(diff.days/365)
