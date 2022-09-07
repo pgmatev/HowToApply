@@ -107,6 +107,7 @@ def edit_profile(request):
 
             context = {'edit_user_form': edit_user_form, 'edit_student_form': edit_student_form, 'user': user}
             return render(request, 'hta_platform/edit_student_profile.html', context)
+
         elif hasattr(user, 'university'):
             # edit_user_form = EditUserForm(instance=user)
             # i need to decide which user attributes i want to edit in university edit and make a form for them
@@ -205,10 +206,8 @@ def search(request):
                                                      Q(user__last_name__icontains=search_query))
             search_universities = University.objects.filter(Q(user__username__icontains=search_query) |
                                                             Q(name__icontains=search_query))
-            print("hi")
             search_programs = Program.objects.filter(Q(name__icontains=search_query) |
-                                                        Q(description__icontains=search_query))
-            print(search_programs)
+                                                     Q(description__icontains=search_query))
             search_results = list(chain(search_students, search_universities))
             context['search_results'] = search_results
             context['search_query'] = search_query

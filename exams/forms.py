@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Exam
+from .models import Exam, StudentExam
 from hta_platform.models import Subject
 
 
@@ -21,3 +21,13 @@ class ExamForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Description'})
         }
         fields = ['name', 'exam_date', 'deadline', 'subject', 'description']
+
+
+class StudentExamForm(forms.ModelForm):
+    class Meta:
+        model = StudentExam
+        widgets = {
+            'mark': forms.NumberInput(
+                attrs={'step': 0.01, 'class': 'form-control', 'placeholder': 'Mark'})
+        }
+        fields = ['mark']

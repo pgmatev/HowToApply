@@ -29,7 +29,6 @@ def list_exams(request, *args, **kwargs):
 def create_exam(request):
     user = request.user
     exam_form = ExamForm(request.POST or None)
-    print(exam_form)
 
     if user:
         if hasattr(user, 'university'):
@@ -89,21 +88,23 @@ def view_exam(request, *args, **kwargs):
     exam = Exam.objects.get(id=exam_id)
 
     user = request.user
-    is_registered = False
-    registered_students = []
-    students_count = 0
-
+    context = {'exam': exam}
     if user:
         if hasattr(user, "student"):
             if StudentExam.objects.filter(student=user.student, exam=exam).exists():
                 is_registered = True
+
+                context = {'exam': exam, 'is_registered': is_registered}
+
         if hasattr(user, "university"):
             if exam.university == user.university:
-                registered_students = list(Student.objects.filter(exams__id=exam.id).order_by("user__first_name"))
+                registered_students = list(StudentExam.objects.filter(exam=exam.id).order_by("student__user__first_name"))
                 students_count = len(registered_students)
+                if request.is_ajax() and request.method == 'POST':
+                    StudentExam.objects.filter(id=request.POST["student"]).update(mark=request.POST["mark"])
+                context = {'exam': exam, 'registered_students': registered_students,
+                           'students_count': students_count}
 
-    context = {'exam': exam, 'is_registered': is_registered, 'registered_students': registered_students,
-               'students_count': students_count}
     return render(request, 'exams/view_exam.html', context)
 
 
@@ -125,3 +126,22 @@ def student_exam_register(request, *args, **kwargs):
             student_exam.save()
 
         return redirect("exams:view_exam", exam_id=exam.id)
+
+
+# @login_required
+# def mark_student(request, *args, **kwargs)
+#     exam_id = kwargs.get('exam_id')
+#     student_id = kwargs.get('student_id')
+#     user = request.user
+#
+#     if hasattr(user, 'university'):
+#         try:
+#             exam = Exam.objects.get(id=exam_id)
+#             student = Student.objects.get(id=student_id)
+#         except Exam.DoesNotExist() or Student.DoesNotExist():
+#             return HttpResponse("Exam or Student don't exist")
+#
+#         if user.university == exam.university:
+#             student_exam = StudentExam.objects.get(student=student, exam=exam)
+#             if student_exam.exists():
+#                 student_exam.mark = request.POST.get("mark")
