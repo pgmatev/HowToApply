@@ -163,13 +163,13 @@ def ranking(request, *args, **kwargs):
     students_dict = {}
     for program_exam in program_exams:
         students = program_exam.exam.student_set.all()
-        print(program_exam.exam)
-        for student in students:
-            student_exam = StudentExam.objects.get(exam=program_exam.exam, student=student)
-            student_mark = student.obligatory_mark * decimal.Decimal(program.obligatory_coef) + \
-                student_exam.mark * decimal.Decimal(program_exam.coef)
-            if student_mark > students_dict.setdefault(f"{student.user.first_name} {student.user.last_name}", 0):
-                students_dict[f"{student.user.first_name} {student.user.last_name}"] = student_mark
+        if program_exam.exam.is_marked:
+            for student in students:
+                student_exam = StudentExam.objects.get(exam=program_exam.exam, student=student)
+                student_mark = student.obligatory_mark * decimal.Decimal(program.obligatory_coef) + \
+                    student_exam.mark * decimal.Decimal(program_exam.coef)
+                if student_mark > students_dict.setdefault(f"{student.user.first_name} {student.user.last_name}", 0):
+                    students_dict[f"{student.user.first_name} {student.user.last_name}"] = student_mark
 
     students_dict = {k: v for k, v in sorted(students_dict.items(), key=lambda item: item[1], reverse=True)}
     context = {'students_dict': students_dict}

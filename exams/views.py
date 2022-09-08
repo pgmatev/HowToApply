@@ -91,9 +91,11 @@ def view_exam(request, *args, **kwargs):
     context = {'exam': exam}
     if user:
         if hasattr(user, "student"):
-            student_exam = StudentExam.objects.get(student=user.student, exam=exam)
+            try:
+                student_exam = StudentExam.objects.get(student=user.student, exam=exam)
+            except StudentExam.DoesNotExist:
+                student_exam = None
             if student_exam:
-                print(student_exam.mark)
                 context = {'exam': exam, 'is_registered': True, 'student_exam': student_exam}
 
         if hasattr(user, "university"):
