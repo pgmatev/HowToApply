@@ -91,18 +91,22 @@ def view_exam(request, *args, **kwargs):
     context = {'exam': exam}
     if user:
         if hasattr(user, "student"):
-            if StudentExam.objects.filter(student=user.student, exam=exam).exists():
-                is_registered = True
-
-                context = {'exam': exam, 'is_registered': is_registered}
+            student_exam = StudentExam.objects.get(student=user.student, exam=exam)
+            if student_exam:
+                print(student_exam.mark)
+                context = {'exam': exam, 'is_registered': True, 'student_exam': student_exam}
 
         if hasattr(user, "university"):
             if exam.university == user.university:
-                registered_students = list(StudentExam.objects.filter(exam=exam.id).order_by("student__user__first_name"))
-                students_count = len(registered_students)
+                student_exams = list(StudentExam.objects.filter(exam=exam.id).order_by("student__user__first_name"))
+                students_count = len(student_exams)
                 if request.is_ajax() and request.method == 'POST':
-                    StudentExam.objects.filter(id=request.POST["student"]).update(mark=request.POST["mark"])
-                context = {'exam': exam, 'registered_students': registered_students,
+                    if request.POST["action"] == "mark_student":
+                        StudentExam.objects.filter(id=request.POST["student"]).update(mark=request.POST["mark"])
+                    elif request.POST["action"] == "submit_marks":
+                        exam.is_marked = True
+                        exam.save()
+                context = {'exam': exam, 'student_exams': student_exams,
                            'students_count': students_count}
 
     return render(request, 'exams/view_exam.html', context)

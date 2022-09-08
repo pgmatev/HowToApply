@@ -13,6 +13,7 @@ class Exam(models.Model):
     deadline = models.DateTimeField()
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     description = models.TextField(blank=True)
+    is_marked = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name

@@ -1,8 +1,11 @@
 {% extends 'hta_platform/base.html' %}
 {% block content %}
     <p>you are registered for</p>
-    {% for exam in student_exams %}
-        <a href={% url 'exams:view_exam' exam_id=exam.exam.id %}>{{ exam.exam.name }}</a>
+    {% for student_exam in student_exams %}
+        <a href={% url 'exams:view_exam' exam_id=student_exam.exam.id %}>{{ student_exam.exam.name }}</a>
+        {% if student_exam.exam.is_marked %}
+            {{ student_exam.mark }}
+        {% endif %}
         <br>
     {% endfor %}
 {% endblock %}

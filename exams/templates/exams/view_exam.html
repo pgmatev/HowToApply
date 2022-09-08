@@ -13,9 +13,12 @@
                     {% else %}
                         <p>No description.</p>
                     {% endif %}
+                    <hr>
                 {% if request.user.student %}
-                    {% if is_registered %}
+                    {% if is_registered and not exam.is_marked%}
                         <p>You are registered</p>
+                    {% elif is_registered and exam.is_marked %}
+                        <p>Your score: {{ student_exam.mark }}/6.00</p>
                     {% elif not exam.past_deadline %}
                         <a class="btn" href={% url 'exams:student_exam_register' exam_id=exam.id %}>Register for Exam</a>
                     {% endif %}
@@ -30,35 +33,42 @@
             <thead>
                 <tr>
                     <th>Registered students {{ students_count }}</th>
+                    <th id="submit-marks-location">
+                    {% if exam.is_marked %}
+                        <small>The exam is marked</small>
+                    {% elif exam.is_upcoming%}
+                        <small>You can mark students after the exam has taken place</small>
+                    {% else %}
+                        <button class="btn btn-primary" id="submit-marks" type="submit">Submit marks</button>
+                    {% endif %}
+                    </th>
                 </tr>
             </thead>
             <tbody>
-                {% if registered_students %}
-                    {% for registered_student in registered_students %}
+                {% if student_exams %}
+                    {% for student_exam in student_exams %}
                         <tr>
                             <td>
-                                <a href="{% url 'hta_platform:profiles' user_id=registered_student.student.user.id%}" class="text-decoration-none link-dark">
-                                    {{ registered_student.student.user.first_name}} {{ registered_student.student.user.last_name }}
+                                <a href="{% url 'hta_platform:profiles' user_id=student_exam.student.user.id%}" class="text-decoration-none link-dark">
+                                    {{ student_exam.student.user.first_name}} {{ student_exam.student.user.last_name }}
                                 </a>
                             </td>
-                            <td style="width:25%" id="mark-location-{{ registered_student.id }}">
-                                {% if not exam.is_upcoming and not registered_student.mark%}
+                            <td style="width:25%" id="mark-location-{{ student_exam.id }}">
+                                {% if not exam.is_upcoming and not student_exam.mark%}
                                     <div class="input-group input-group-sm">
                                     {% csrf_token %}
-                                        <input type="hidden" id="student-{{ registered_student.id }}" value="{{ registered_student.id }}">
-                                      <input step="0.01" type="number" class="form-control" id="mark-{{ registered_student.id }}" placeholder="Mark" value="">
+                                        <input type="hidden" id="student-{{ student_exam.id }}" value="{{ student_exam.id }}">
+                                      <input step="0.01" type="number" class="form-control" id="mark-{{ student_exam.id }}" placeholder="Mark" value="">
                                       <div class="input-group-append">
-                                        <button class="btn btn-outline-primary" type="submit" id="submit-mark-{{ registered_student.id }}">Enter</button>
+                                        <button class="btn btn-outline-primary" type="submit" id="submit-mark-{{ student_exam.id }}">Enter</button>
                                       </div>
                                     </div>
-{#                                    <a href="{% url 'exams:mark_student' program_id=registered_student.id exam_id=exam.id%}">Mark</a>#}
                                 {% else %}
-                                    <p>{{ registered_student.mark }}</p>
+                                    <p>{{ student_exam.mark }}</p>
                                 {% endif %}
                             </td>
                         </tr>
                     {% endfor %}
-                    <button type="submit">Submit marks</button>
                 {% else %}
                     <tr>
                         <td>None</td>
@@ -71,23 +81,40 @@
     </div>
 
 <script>
-    {% for registered_student in registered_students %}
-    $("#submit-mark-{{ registered_student.id }}").click(function (e) {
+    $("#submit-marks").click(function (e) {
         e.preventDefault();
-        let student = $("#student-{{ registered_student.id }}").val();
-        let mark = $("#mark-{{ registered_student.id }}").val();
-        console.log(mark);
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'exams:view_exam' exam_id=exam.id%}",
+            data: {
+                action: "submit_marks",
+                is_marked: true,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function (response) {
+                $("#submit-marks-location").empty();
+                $("#submit-marks-location").append("<small>The exam is marked</small>");
+            }
+        })
+    })
+
+    {% for student_exam in student_exams %}
+    $("#submit-mark-{{ student_exam.id }}").click(function (e) {
+        e.preventDefault();
+        let student = $("#student-{{ student_exam.id }}").val();
+        let mark = $("#mark-{{ student_exam.id }}").val();
         $.ajax({
             type: 'POST',
             url: "{% url 'exams:view_exam' exam_id=exam.id %}",
             data: {
+                action: "mark_student",
                 student: student,
                 mark: mark,
                 csrfmiddlewaretoken: '{{ csrf_token }}'
             },
             success: function (response) {
-                $("#mark-location-{{ registered_student.id }}").empty();
-                $("#mark-location-{{ registered_student.id }}").append(mark)
+                $("#mark-location-{{ student_exam.id }}").empty();
+                $("#mark-location-{{ student_exam.id }}").append(mark)
             },
             error: function (response) {
                 alert(response["responseJSON"]["error"]);
