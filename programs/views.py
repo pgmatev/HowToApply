@@ -1,9 +1,12 @@
+import decimal
+
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.forms.models import modelformset_factory
 
 from .models import Program, ProgramExam
 from hta_platform.models import User
+from exams.models import StudentExam
 from .forms import ProgramForm, ProgramExamForm
 
 
@@ -151,3 +154,23 @@ def delete_program(request, *args, **kwargs):
         return redirect('programs:list_programs', university_username=request.user.username)
     else:
         return redirect('programs:view_program', program_id=program.id)
+
+
+def ranking(request, *args, **kwargs):
+    program_id = kwargs.get("program_id")
+    program = Program.objects.get(id=program_id)
+    program_exams = ProgramExam.objects.filter(program=program).all()
+    students_dict = {}
+    for program_exam in program_exams:
+        students = program_exam.exam.student_set.all()
+        print(program_exam.exam)
+        for student in students:
+            student_exam = StudentExam.objects.get(exam=program_exam.exam, student=student)
+            student_mark = student.obligatory_mark * decimal.Decimal(program.obligatory_coef) + \
+                student_exam.mark * decimal.Decimal(program_exam.coef)
+            if student_mark > students_dict.setdefault(f"{student.user.first_name} {student.user.last_name}", 0):
+                students_dict[f"{student.user.first_name} {student.user.last_name}"] = student_mark
+
+    students_dict = {k: v for k, v in sorted(students_dict.items(), key=lambda item: item[1], reverse=True)}
+    context = {'students_dict': students_dict}
+    return render(request, 'programs/ranking.html', context)

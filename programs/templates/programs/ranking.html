@@ -1,0 +1,7 @@
+{% extends 'hta_platform/base.html' %}
+{% block content %}
+    {% for key, value in students_dict.items %}
+        <p>{{ key }} : {{ value }}</p>
+    {% endfor %}
+
+{% endblock %}

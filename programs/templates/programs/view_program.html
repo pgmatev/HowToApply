@@ -8,14 +8,13 @@
             </div>
             <div class="card-body">
                 <a href="{% url 'hta_platform:profiles' user_id=program.university.user.id %}">{{ program.university.name }}</a>
+                <a href="{% url 'programs:ranking' program_id=program.id%}" class="btn btn-primary">Ranking</a>
                 {% if request.user == program.university.user %}
                 <a class="btn btn-secondary" href="{% url 'programs:update_program' program_id=program.id %}">Edit</a>
                 {% endif %}
                 {% for program_exam in program_exams %}
                     <p>{{ program_exam.exam.name }} {{ program_exam.coef }}</p>
                 {% endfor %}
-
-
             </div>
         </div>
     </div>
