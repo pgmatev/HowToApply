@@ -200,17 +200,17 @@ def search(request):
     if request.method == 'GET':
         search_query = request.GET.get("q")
         if len(search_query) > 0:
-            search_students = Student.objects.filter(Q(user__username__icontains=search_query) |
+            search_students = list(Student.objects.filter(Q(user__username__icontains=search_query) |
                                                      Q(user__email__icontains=search_query) |
                                                      Q(user__first_name__icontains=search_query) |
-                                                     Q(user__last_name__icontains=search_query))
-            search_universities = University.objects.filter(Q(user__username__icontains=search_query) |
-                                                            Q(name__icontains=search_query))
-            search_programs = Program.objects.filter(Q(name__icontains=search_query) |
-                                                     Q(description__icontains=search_query))
-            search_results = list(chain(search_students, search_universities))
-            context['search_results'] = search_results
-            context['search_query'] = search_query
-            context['search_programs'] = search_programs
+                                                     Q(user__last_name__icontains=search_query)))
+            search_universities = list(University.objects.filter(Q(user__username__icontains=search_query) |
+                                                            Q(name__icontains=search_query)))
+            search_programs = list(Program.objects.filter(Q(name__icontains=search_query) |
+                                                     Q(description__icontains=search_query)))
+            context = {'search_students': search_students,
+                       'search_universities': search_universities,
+                       'search_programs': search_programs,
+                       'search_query': search_query}
 
     return render(request, 'hta_platform/search_results.html', context)

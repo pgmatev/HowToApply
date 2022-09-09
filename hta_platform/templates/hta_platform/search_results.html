@@ -1,109 +1,62 @@
 {% extends "hta_platform/base.html" %}
 {% block content %}
-    <h1>Search results for "{{ search_query }}:"</h1>
-    {% if search_results or search_programs%}
-        {% for result in search_results %}
-            <div class="card mt-5 border-5 pt-2 active pb-0 px-3" style="width: 32rem">
-            <div class="card-body ">
-                <div class="row">
-                    <div class="col-12 ">
-                        <h4 class="card-title "><b><a href="{% url 'hta_platform:profiles' user_id=result.user.id %}">{{ result.user.username }}</a></b></h4>
-                    </div>
-                    <div class="col">
-                        <h6 class="card-subtitle mb-2 text-muted">
-                            <p class="card-text text-muted small ">
-                                <img src="https://img.icons8.com/metro/26/000000/star.png" class="mr-1 " width="19"
-                                    height="19" id="star"> <span class="vl mr-2 ml-0"></span>
-                                Created by <span class="font-weight-bold"> BBBootstrap Team</span> on 1 Nov , 2018</p>
-                        </h6>
-                    </div>
-                </div>
-            </div>
-            <div class="card-footer bg-white px-0 ">
-                <div class="row">
-
-                    <div class=" col-md-auto ">
-                        <a href="#" class="btn btn-outlined btn-black text-muted bg-transparent"
-                            data-wow-delay="0.7s"><img src="https://img.icons8.com/ios/50/000000/settings.png"
-                                width="19" height="19"> <small>SETTINGS</small></a>
-
-                        <i class="mdi mdi-settings-outline"></i>
-                        <a href="#" class="
-                         btn-outlined btn-black text-muted"><img src="https://img.icons8.com/metro/26/000000/link.png"
-                                width="17" height="17" id="plus">
-                            <small>PROGRAM LINK</small> </a>
-                        <a href="#" class="btn btn-outlined btn-black text-muted "><img
-                                src="https://img.icons8.com/metro/26/000000/more.png" width="20" height="20"
-                                class="mr-2 more"><small>MORE</small></a>
-                        <span class="vl ml-3"></span>
-                    </div>
-                    <div class="col-md-auto ">
-                        <ul class="list-inline">
-                            <li class="list-inline-item"> <img
-                                    src="https://res.cloudinary.com/dxfq3iotg/image/upload/v1573035860/Pra/Hadie-profile-pic-circle-1.png"
-                                    alt="DP" class="  rounded-circle img-fluid " width="35" height="35">
-                            </li>
-                            <li class="list-inline-item"> <img src="https://img.icons8.com/ios/50/000000/plus.png"
-                                    width="30" height="30 " class="more">
-                            </li>
-                        </ul>
+    <h1 class="text-center mt-4">Search results for "{{ search_query }}"</h1>
+    <div class="container">
+        {% if search_students %}
+            <div class="d-flex justify-content-center">
+                <div class="card" style="width: 50%;">
+                    <div class="card-body">
+                        <h4 class="card-title">Students</h4>
+                        {% for student in search_students %}
+                            <a class="text-decoration-none" href="{% url 'hta_platform:profiles' user_id=student.user.id %}">
+                                {{ student.user.first_name }} {{ student.user.last_name }}
+                            </a>
+                            {% if student != search_students|last %}
+                                <hr>
+                            {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
             </div>
-        </div>
-        <p>#I need to decide what info to put in these placeholders</p>
-        {% endfor %}
-        {% for program in search_programs %}
-            <div class="card mt-5 border-5 pt-2 active pb-0 px-3" style="width: 32rem">
-            <div class="card-body ">
-                <div class="row">
-                    <div class="col-12 ">
-                        <h4 class="card-title "><b><a href="{% url 'programs:view_program' program_id=program.id%}">{{ program.name }}</a></b></h4>
-                    </div>
-                    <div class="col">
-                        <h6 class="card-subtitle mb-2 text-muted">
-                            <p class="card-text text-muted small ">
-                                <img src="https://img.icons8.com/metro/26/000000/star.png" class="mr-1 " width="19"
-                                    height="19" id="star"> <span class="vl mr-2 ml-0"></span>
-                                Created by <span class="font-weight-bold"> BBBootstrap Team</span> on 1 Nov , 2018</p>
-                        </h6>
+        {% endif %}
+        <br>
+        {% if search_universities %}
+            <div class="d-flex justify-content-center">
+                <div class="card" style="width: 50%;">
+                    <div class="card-body">
+                        <h4 class="card-title">Universities</h4>
+                        {% for university in search_universities %}
+                            <a class="text-decoration-none" href="{% url 'hta_platform:profiles' user_id=university.user.id %}">
+                                {{ university.name }}
+                            </a>
+                            {% if university != search_universities|last %}
+                                <hr>
+                            {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
             </div>
-            <div class="card-footer bg-white px-0 ">
-                <div class="row">
-
-                    <div class=" col-md-auto ">
-                        <a href="#" class="btn btn-outlined btn-black text-muted bg-transparent"
-                            data-wow-delay="0.7s"><img src="https://img.icons8.com/ios/50/000000/settings.png"
-                                width="19" height="19"> <small>SETTINGS</small></a>
-
-                        <i class="mdi mdi-settings-outline"></i>
-                        <a href="#" class="
-                         btn-outlined btn-black text-muted"><img src="https://img.icons8.com/metro/26/000000/link.png"
-                                width="17" height="17" id="plus">
-                            <small>PROGRAM LINK</small> </a>
-                        <a href="#" class="btn btn-outlined btn-black text-muted "><img
-                                src="https://img.icons8.com/metro/26/000000/more.png" width="20" height="20"
-                                class="mr-2 more"><small>MORE</small></a>
-                        <span class="vl ml-3"></span>
-                    </div>
-                    <div class="col-md-auto ">
-                        <ul class="list-inline">
-                            <li class="list-inline-item"> <img
-                                    src="https://res.cloudinary.com/dxfq3iotg/image/upload/v1573035860/Pra/Hadie-profile-pic-circle-1.png"
-                                    alt="DP" class="  rounded-circle img-fluid " width="35" height="35">
-                            </li>
-                            <li class="list-inline-item"> <img src="https://img.icons8.com/ios/50/000000/plus.png"
-                                    width="30" height="30 " class="more">
-                            </li>
-                        </ul>
+        {% endif %}
+        <br>
+        {% if search_programs %}
+            <div class="d-flex justify-content-center">
+                <div class="card" style="width:50%;">
+                    <div class="card-body">
+                        <h4 class="card-title">Programs</h4>
+                        {% for program in search_programs %}
+                            <a class="text-decoration-none" href="{% url 'programs:view_program' program_id=program.id %}">
+                                {{ program.name }}
+                            </a>
+                            {% if program != search_programs|last %}
+                                <hr>
+                            {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
             </div>
-        </div>
-        {% endfor %}
-    {% else %}
-        <p>No results</p>
-    {% endif %}
+        {% endif %}
+        {% if not search_students and not search_universities and not search_programs %}
+            <h4 class="text-center">No results</h4>
+        {% endif %}
+    </div>
 {% endblock %}
