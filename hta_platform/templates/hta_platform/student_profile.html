@@ -28,8 +28,10 @@
                         <span>{{ user.email }}</span>
                     </p>
                     <p>
+                        {% if user.student.birthday %}
                         <i class="far fa-id-card" style="padding-right: 10px"></i>
                         <span>{{ user.student.calculate_age }} years old | {{ user.student.birthday }}</span>
+                        {% endif %}
                     </p>
                     <p>
                         <i class="fas fa-user-graduate" style="padding-right: 10px"></i>

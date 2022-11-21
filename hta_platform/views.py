@@ -40,6 +40,7 @@ def home(request):
     if user:
 
         if hasattr(user, 'student'):
+
             student_exams = StudentExam.objects.filter(student=user.student)
 
             context = {'user': user, 'student_exams': student_exams}
@@ -56,7 +57,7 @@ def home(request):
         else:
             context = {'user': user}
             # need to pass message
-            return render(request, 'hta_platform/home.html', context)
+            return render(request, 'hta_platform/home.html', context) # need to decide how to display content for admins
 
 
 # @login_required(login_url='/')
@@ -82,7 +83,7 @@ def profile(request, *args, **kwargs):
         else:
             context = {'user': user}
             # need to pass message
-            return render(request, 'hta_platform/student_home.html', context)
+            return render(request, 'hta_platform/home.html', context)
 
 
 @login_required
